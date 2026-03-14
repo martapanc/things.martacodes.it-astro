@@ -1,8 +1,8 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import react from '@astrojs/react';
-import tailwind from '@astrojs/tailwind';
 import mdx from '@astrojs/mdx';
+import tailwindcss from '@tailwindcss/vite';
 import sitemap from '@astrojs/sitemap';
 import remarkGfm from 'remark-gfm';
 // @ts-expect-error no types
@@ -19,6 +19,7 @@ export default defineConfig({
         service: { entrypoint: 'astro/assets/services/noop' },
     },
     vite: {
+        plugins: [tailwindcss()],
         resolve: {
             alias: [
                 {
@@ -33,7 +34,6 @@ export default defineConfig({
     },
     integrations: [
         react(),
-        tailwind({ applyBaseStyles: false }),
         mdx({
             remarkPlugins: [remarkGfm, remarkA11yEmoji],
             rehypePlugins: [rehypeSlug, rehypeAutolinkHeadings],

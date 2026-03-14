@@ -1,5 +1,11 @@
-import { FiMail } from 'react-icons/fi';
+import { Icon, addCollection } from '@iconify/react';
 import { footerItems, socialLinks } from '@/data/Navigation';
+import simpleIcons from '@iconify-json/simple-icons/icons.json';
+import feather from '@iconify-json/feather/icons.json';
+
+// Register icon sets for client-side rendering
+addCollection(simpleIcons as Parameters<typeof addCollection>[0]);
+addCollection(feather as Parameters<typeof addCollection>[0]);
 
 export default function FooterSocial() {
     const year = new Date().getFullYear();
@@ -36,7 +42,8 @@ export default function FooterSocial() {
                             href='mailto:info@martacodes.it'
                             className='focus-visible:ring-primary-300 rounded-sm align-middle focus:outline-none focus-visible:ring'
                         >
-                            <FiMail
+                            <Icon
+                                icon='feather:mail'
                                 className='hover:text-primary-500 dark:hover:text-primary-300 h-7 w-7 align-middle text-blue-900 dark:text-gray-300'
                                 aria-label='Send an Email'
                             />
@@ -51,8 +58,8 @@ export default function FooterSocial() {
                             target='_blank'
                             rel='noopener noreferrer'
                         >
-                            <socialLink.icon
-                                size={50}
+                            <Icon
+                                icon={socialLink.icon}
                                 aria-label={socialLink.id}
                                 className='hover:text-primary-500 dark:hover:text-primary-300 my-auto h-6 w-6 align-middle text-blue-900 transition-colors dark:text-gray-300'
                             />

@@ -1,3 +1,5 @@
+@reference 'tailwindcss';
+
 article p {
     margin-bottom: 1rem;
 }

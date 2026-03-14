@@ -1,5 +1,6 @@
 ---
 import { render, type CollectionEntry } from 'astro:content';
+import BgIcon from '@/components/atoms/BgIcon.astro';
 
 interface Props {
     update: CollectionEntry<'updates'>;
@@ -17,7 +18,7 @@ const formattedDate = update.data.date.toLocaleDateString('en-GB', {
 
 <div
     id={update.id}
-    class='duration-400 my-3 h-auto rounded-2xl bg-slate-100 p-4 transition ease-in-out dark:bg-slate-900'
+    class='duration-400 h-auto rounded-2xl bg-slate-100 p-4 transition ease-in-out dark:bg-slate-900'
 >
     <div class='flex h-full flex-col gap-5 lg:flex-row'>
         <div
@@ -33,26 +34,14 @@ const formattedDate = update.data.date.toLocaleDateString('en-GB', {
             <div>
                 <div class='mb-2 flex flex-row items-start justify-between'>
                     <span class='flex justify-end gap-1 italic'>
-                        <div
-                            class='mr-1 flex h-6 w-6 items-center justify-center rounded-md bg-slate-900/10 text-black/55 transition dark:bg-white/10 dark:text-white/55'
-                        >
-                            <svg
-                                xmlns='http://www.w3.org/2000/svg'
-                                viewBox='0 0 24 24'
-                                fill='currentColor'
-                                class='h-3 w-3'
-                            >
-                                <path
-                                    d='M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z'
-                                ></path>
-                            </svg>
-                        </div>
+                        <BgIcon icon='material-symbols:calendar-month-rounded' />
                         {formattedDate}
                     </span>
 
                     {
                         update.data.tags && update.data.tags.length > 0 && (
                             <div class='hidden sm:flex flex-wrap gap-1'>
+                                <BgIcon icon='fa6-solid:hashtag' accent />
                                 {update.data.tags.map((tag) => (
                                     <a
                                         href={`/updates/tags/${tag}`}
@@ -79,6 +68,7 @@ const formattedDate = update.data.date.toLocaleDateString('en-GB', {
                 {
                     update.data.tags && update.data.tags.length > 0 && (
                         <div class='flex justify-end sm:hidden flex-wrap gap-1'>
+                            <BgIcon icon='fa6-solid:hashtag' accent />
                             {update.data.tags.map((tag) => (
                                 <a
                                     href={`/updates/tags/${tag}`}

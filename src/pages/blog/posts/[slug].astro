@@ -4,7 +4,7 @@ import BlogLayout from '@/layouts/BlogLayout.astro';
 import PostHeader from '@/components/PostHeader.astro';
 import { Comments } from '@/components/Comments';
 import { allCategories } from '@/types/Post';
-import '@/styles/aoc.scss';
+import '@/styles/aoc.css';
 
 export async function getStaticPaths() {
     const posts = await getCollection('posts', ({ data }) => data.published);

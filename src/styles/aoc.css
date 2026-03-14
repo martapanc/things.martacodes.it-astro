@@ -1,0 +1,25 @@
+/* Shiki token styling for custom AoC language */
+/* Classes added by shiki-aoc-transformer.ts */
+.astro-code[data-language='aoc'] {
+    .aoc-dot {
+        color: color-mix(in srgb, var(--color-gray-50) 35%, transparent);
+    }
+    .aoc-hash {
+        color: var(--color-slate-50);
+    }
+    .aoc-up {
+        color: var(--color-green-600);
+    }
+    .aoc-pipe {
+        color: var(--color-indigo-400);
+    }
+    .aoc-at {
+        color: var(--color-amber-500);
+    }
+    .aoc-box {
+        color: var(--color-orange-700);
+    }
+    .aoc-label {
+        color: var(--color-blue-400);
+    }
+}

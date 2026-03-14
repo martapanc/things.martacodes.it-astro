@@ -3,6 +3,7 @@ import SiteLayout from './SiteLayout.astro';
 import Sidebar from '@/components/Sidebar.astro';
 import Breadcrumbs from '@/components/molecules/Breadcrumbs.astro';
 import { getAllPostPreviews, listCategoriesWithCounts, listTags } from '@/lib/posts';
+import Icon from '@/components/atoms/Icon.astro';
 
 interface Props {
     title?: string;
@@ -47,9 +48,7 @@ const tags = listTags(allPosts);
                     {previous ? (
                         <a href={`/blog/posts/${previous.slug}`}>
                             <div class='flex items-center gap-4 rounded-xl bg-white px-6 py-4 drop-shadow-sm hover:bg-slate-50 dark:bg-dark group transition justify-start'>
-                                <svg class='h-8 w-8 text-blue-800 transition-transform dark:text-blue-200 group-hover:-translate-x-2' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
-                                    <path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M15 19l-7-7 7-7' />
-                                </svg>
+                                <Icon icon='material-symbols:chevron-left' class='h-8 w-8 text-blue-800 transition-transform dark:text-blue-200 group-hover:-translate-x-2' />
                                 <span class='text-md max-w-[400px] truncate'>{previous.title}</span>
                             </div>
                         </a>
@@ -60,9 +59,7 @@ const tags = listTags(allPosts);
                         <a href={`/blog/posts/${next.slug}`}>
                             <div class='flex items-center gap-4 rounded-xl bg-white px-6 py-4 drop-shadow-sm hover:bg-slate-50 dark:bg-dark group transition justify-end'>
                                 <span class='text-md max-w-[400px] truncate'>{next.title}</span>
-                                <svg class='h-8 w-8 text-blue-800 transition-transform dark:text-blue-200 group-hover:translate-x-2' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
-                                    <path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M9 5l7 7-7 7' />
-                                </svg>
+                                <Icon icon='material-symbols:chevron-right' class='h-8 w-8 text-blue-800 transition-transform dark:text-blue-200 group-hover:translate-x-2' />
                             </div>
                         </a>
                     )}

@@ -1,0 +1,33 @@
+---
+import { getIconData, iconToSVG, iconToHTML } from '@iconify/utils';
+import type { IconifyJSON } from '@iconify/types';
+import fa6Solid from '@iconify-json/fa6-solid/icons.json';
+import bi from '@iconify-json/bi/icons.json';
+import materialSymbols from '@iconify-json/material-symbols/icons.json';
+import feather from '@iconify-json/feather/icons.json';
+import simpleIcons from '@iconify-json/simple-icons/icons.json';
+
+const iconSets: Record<string, IconifyJSON> = {
+    'fa6-solid': fa6Solid as IconifyJSON,
+    'bi': bi as IconifyJSON,
+    'material-symbols': materialSymbols as IconifyJSON,
+    'feather': feather as IconifyJSON,
+    'simple-icons': simpleIcons as IconifyJSON,
+};
+
+interface Props {
+    icon: string;
+    class?: string;
+}
+
+const { icon, class: className } = Astro.props;
+const [prefix, name] = icon.split(':');
+const iconSet = iconSets[prefix];
+const iconData = iconSet ? getIconData(iconSet, name) : null;
+const renderData = iconData ? iconToSVG(iconData) : null;
+const html = renderData
+    ? iconToHTML(renderData.body, { ...renderData.attributes, ...(className ? { class: className } : {}) })
+    : '';
+---
+
+<Fragment set:html={html} />

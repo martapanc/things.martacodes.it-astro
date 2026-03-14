@@ -1,15 +1,3 @@
-import type { IconType } from 'react-icons';
-import { FaLinkedin } from 'react-icons/fa';
-import {
-    SiGithub,
-    SiGoodreads,
-    SiInstagram,
-    SiMedium,
-    SiSteam,
-    SiThreads,
-    SiYoutube,
-} from 'react-icons/si';
-
 type NavbarItem = {
     href: string;
     name?: string;
@@ -48,49 +36,49 @@ export const footerItems: NavbarItem[] = [
 
 type SocialLink = {
     href: string;
-    icon: IconType;
+    icon: string;
     id: string;
 };
 
 export const socialLinks: SocialLink[] = [
     {
         href: 'https://github.com/martapanc',
-        icon: SiGithub,
+        icon: 'simple-icons:github',
         id: 'Github',
     },
     {
         href: 'https://www.linkedin.com/in/martapancaldi',
-        icon: FaLinkedin,
+        icon: 'simple-icons:linkedin',
         id: 'Linkedin',
     },
     {
         href: 'https://www.instagram.com/pancakemarta',
-        icon: SiInstagram,
+        icon: 'simple-icons:instagram',
         id: 'Instagram',
     },
     {
         href: 'https://www.threads.net/@pancakemarta',
-        icon: SiThreads,
+        icon: 'simple-icons:threads',
         id: 'Threads',
     },
     {
         href: 'https://medium.com/@marta.panc',
-        icon: SiMedium,
+        icon: 'simple-icons:medium',
         id: 'Medium',
     },
     {
         href: 'https://www.goodreads.com/topolinamarta',
-        icon: SiGoodreads,
+        icon: 'simple-icons:goodreads',
         id: 'Goodreads',
     },
     {
         href: 'https://youtube.com/@pancakemarta',
-        icon: SiYoutube,
+        icon: 'simple-icons:youtube',
         id: 'Youtube',
     },
     {
         href: 'https://steamcommunity.com/id/martap/',
-        icon: SiSteam,
+        icon: 'simple-icons:steam',
         id: 'Steam',
     },
 ];

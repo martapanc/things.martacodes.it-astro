@@ -1,10 +1,38 @@
+@import 'tailwindcss';
 @import '@fontsource/caveat/500.css';
 @import '@fontsource/kalam/400.css';
 @import 'flag-icons/css/flag-icons.min.css';
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* Custom theme — extends Tailwind's default theme */
+@theme {
+    --font-primary: 'Roboto Thin', ui-sans-serif, system-ui, sans-serif;
+    --font-updates: 'Georgia', ui-sans-serif, system-ui, sans-serif;
+    --font-handwritten: 'Caveat', ui-sans-serif, system-ui, sans-serif;
+    --font-handwritten-2: 'Kalam', ui-sans-serif, system-ui, sans-serif;
+
+    --color-dark: #0c1018;
+    --color-light: #f1f1f1;
+    --color-cork: #ffcc8f;
+
+    --background-image-photo-gradient: linear-gradient(
+        to bottom right,
+        #f8cf6a,
+        #2178dd
+    );
+    --background-image-food-gradient: linear-gradient(
+        to bottom right,
+        rgba(106, 157, 62, 0.5),
+        rgba(249, 103, 94, 0.6)
+    );
+    --background-image-food-gradient-dark: linear-gradient(
+        to bottom right,
+        rgba(73, 108, 43, 0.5),
+        rgba(179, 74, 68, 0.6)
+    );
+}
+
+/* Class-based dark mode */
+@custom-variant dark (&:where(.dark, .dark *));
 
 :root {
     /* Default theme */
@@ -12,28 +40,17 @@
     --foreground: #0c1018;
 
     /* #region  !**=========== Primary Color =========== */
-    --tw-color-primary-50: 239 246 255;
-    --tw-color-primary-100: 219 234 254;
-    --tw-color-primary-200: 191 219 254;
-    --tw-color-primary-300: 147 197 253;
-    --tw-color-primary-400: 96 165 250;
-    --tw-color-primary-500: 59 130 246;
-    --tw-color-primary-600: 37 99 235;
-    --tw-color-primary-700: 29 78 216;
-    --tw-color-primary-800: 30 64 175;
-    --tw-color-primary-900: 30 58 138;
-    --tw-color-primary-950: 23 37 84;
-    --color-primary-50: rgb(var(--tw-color-primary-50)); /* #eff6ff */
-    --color-primary-100: rgb(var(--tw-color-primary-100)); /* #dbeafe */
-    --color-primary-200: rgb(var(--tw-color-primary-200)); /* #bfdbfe */
-    --color-primary-300: rgb(var(--tw-color-primary-300)); /* #93c5fd */
-    --color-primary-400: rgb(var(--tw-color-primary-400)); /* #60a5fa */
-    --color-primary-500: rgb(var(--tw-color-primary-500)); /* #3b82f6 */
-    --color-primary-600: rgb(var(--tw-color-primary-600)); /* #2563eb */
-    --color-primary-700: rgb(var(--tw-color-primary-700)); /* #1d4ed8 */
-    --color-primary-800: rgb(var(--tw-color-primary-800)); /* #1e40af */
-    --color-primary-900: rgb(var(--tw-color-primary-900)); /* #1e3a8a */
-    --color-primary-950: rgb(var(--tw-color-primary-950)); /* #172554 */
+    --color-primary-50: #eff6ff;
+    --color-primary-100: #dbeafe;
+    --color-primary-200: #bfdbfe;
+    --color-primary-300: #93c5fd;
+    --color-primary-400: #60a5fa;
+    --color-primary-500: #3b82f6;
+    --color-primary-600: #2563eb;
+    --color-primary-700: #1d4ed8;
+    --color-primary-800: #1e40af;
+    --color-primary-900: #1e3a8a;
+    --color-primary-950: #172554;
     /* #endregion  !**======== Primary Color =========== */
 
     --primary-color-light: rgb(42, 42, 116);
@@ -61,10 +78,6 @@
         color: white;
     }
 
-    .font-primary {
-        font-family: 'Roboto Thin', sans-serif;
-    }
-
     /* inter var - latin */
     @font-face {
         font-family: 'Roboto Light';
@@ -74,8 +87,8 @@
         src: url('/fonts/inter-var-latin.woff2') format('woff2');
         unicode-range:
             U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
-            U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212,
-            U+2215, U+FEFF, U+FFFD;
+            U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193,
+            U+2212, U+2215, U+FEFF, U+FFFD;
     }
 
     /* #region  !**=========== Typography =========== */
@@ -174,6 +187,7 @@
                 background-size, color, background-color, border-color;
         }
     }
+
     .animated-underline:hover,
     .animated-underline-2:hover,
     .animated-underline:focus-visible,
@@ -189,13 +203,7 @@
         width: 32px;
         height: 24px;
         position: relative;
-        -webkit-transform: rotate(0deg);
-        -moz-transform: rotate(0deg);
-        -o-transform: rotate(0deg);
         transform: rotate(0deg);
-        -webkit-transition: 0.5s ease-in-out;
-        -moz-transition: 0.5s ease-in-out;
-        -o-transition: 0.5s ease-in-out;
         transition: 0.5s ease-in-out;
         cursor: pointer;
     }
@@ -209,13 +217,7 @@
         border-radius: 3px;
         opacity: 1;
         left: 0;
-        -webkit-transform: rotate(0deg);
-        -moz-transform: rotate(0deg);
-        -o-transform: rotate(0deg);
         transform: rotate(0deg);
-        -webkit-transition: 0.25s ease-in-out;
-        -moz-transition: 0.25s ease-in-out;
-        -o-transition: 0.25s ease-in-out;
         transition: 0.25s ease-in-out;
     }
 
@@ -239,16 +241,10 @@
     }
 
     .burger-icon.open span:nth-child(2) {
-        -webkit-transform: rotate(45deg);
-        -moz-transform: rotate(45deg);
-        -o-transform: rotate(45deg);
         transform: rotate(45deg);
     }
 
     .burger-icon.open span:nth-child(3) {
-        -webkit-transform: rotate(-45deg);
-        -moz-transform: rotate(-45deg);
-        -o-transform: rotate(-45deg);
         transform: rotate(-45deg);
     }
 
@@ -308,5 +304,9 @@
 
     .strong {
         font-weight: 550;
+    }
+
+    .update-body > p {
+        @apply mb-1.5;
     }
 }
