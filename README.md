@@ -10,7 +10,7 @@ Live at **[things.martacodes.it](https://things.martacodes.it)**.
 
 | Layer               | Technology                                       |
 |---------------------|--------------------------------------------------|
-| Framework           | [Astro 5](https://astro.build)                   |
+| Framework           | [Astro 6](https://astro.build)                   |
 | UI                  | [React 19](https://react.dev) (islands)          |
 | Styling             | [Tailwind CSS 3](https://tailwindcss.com), SCSS  |
 | Content             | MDX + Astro Content Collections                  |
