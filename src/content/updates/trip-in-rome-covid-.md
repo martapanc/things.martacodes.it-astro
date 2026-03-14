@@ -4,7 +4,7 @@ slug: trip-to-rome-covid
 date: 2023-04-06T12:00:00.000Z
 published: true
 tags:
-    - trip
+    - travel
 image: https://res.cloudinary.com/dwrurydlt/image/upload/v1731859852/Updates/Rome_h7nzdk.webp
 ---
 

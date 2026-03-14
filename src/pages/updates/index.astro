@@ -7,7 +7,19 @@ const updates = await getAllUpdates();
 ---
 
 <SiteLayout title='Updates | Marta Makes Things' headerText='Marta Updates'>
-    <h1>Updates</h1>
+    <div class='flex items-center justify-between max-w-260'>
+        <h1>Updates</h1>
+        <a
+            id='clear-tags'
+            href='/updates'
+            class='hidden items-center gap-1.5 text-sm text-slate-400 hover:text-slate-600 dark:hover:text-slate-200'
+        >
+            <span>clear filters</span>
+            <svg xmlns='http://www.w3.org/2000/svg' class='h-4 w-4' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.5'>
+                <path stroke-linecap='round' stroke-linejoin='round' d='M6 18L18 6M6 6l12 12' />
+            </svg>
+        </a>
+    </div>
 
     <section>
         <div class='flex flex-col gap-6 py-6 max-w-260'>
@@ -15,3 +27,21 @@ const updates = await getAllUpdates();
         </div>
     </section>
 </SiteLayout>
+
+<script>
+    const activeTags = new URLSearchParams(window.location.search)
+        .get('tags')
+        ?.split(',')
+        .filter(Boolean) ?? [];
+
+    if (activeTags.length > 0) {
+        document.querySelectorAll<HTMLElement>('[data-tags]').forEach((item) => {
+            const itemTags = item.dataset.tags?.split(',') ?? [];
+            const visible = activeTags.some((t) => itemTags.includes(t));
+            item.style.display = visible ? '' : 'none';
+        });
+        const clearBtn = document.getElementById('clear-tags');
+        clearBtn?.classList.remove('hidden');
+        clearBtn?.classList.add('flex');
+    }
+</script>

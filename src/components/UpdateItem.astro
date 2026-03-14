@@ -18,6 +18,7 @@ const formattedDate = update.data.date.toLocaleDateString('en-GB', {
 
 <div
     id={update.id}
+    data-tags={update.data.tags.join(',')}
     class='duration-400 h-auto rounded-2xl bg-slate-100 p-4 transition ease-in-out dark:bg-slate-900'
 >
     <div class='flex h-full flex-col gap-5 lg:flex-row'>
@@ -44,7 +45,7 @@ const formattedDate = update.data.date.toLocaleDateString('en-GB', {
                                 <BgIcon icon='fa6-solid:hashtag' accent />
                                 {update.data.tags.map((tag) => (
                                     <a
-                                        href={`/updates/tags/${tag}`}
+                                        href={`/updates?tags=${tag}`}
                                         class='rounded-md bg-indigo-300 px-1 text-sm font-semibold hover:brightness-110 dark:bg-indigo-900 dark:text-white dark:hover:brightness-125 lg:text-base'
                                     >
                                         {tag}
@@ -71,7 +72,7 @@ const formattedDate = update.data.date.toLocaleDateString('en-GB', {
                             <BgIcon icon='fa6-solid:hashtag' accent />
                             {update.data.tags.map((tag) => (
                                 <a
-                                    href={`/updates/tags/${tag}`}
+                                    href={`/updates?tags=${tag}`}
                                     class='rounded-md bg-indigo-300 px-1 text-sm font-semibold hover:brightness-110 dark:bg-indigo-900 dark:text-white dark:hover:brightness-125 lg:text-base'
                                 >
                                     {tag}
