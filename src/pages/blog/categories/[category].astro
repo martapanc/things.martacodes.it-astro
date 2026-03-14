@@ -1,0 +1,42 @@
+---
+import BlogLayout from '@/layouts/BlogLayout.astro';
+import PostPreviewDisplay from '@/components/PostPreviewDisplay.astro';
+import { getAllPostPreviews, listCategoriesWithCounts } from '@/lib/posts';
+import { allCategories } from '@/types/Post';
+
+export async function getStaticPaths() {
+    const allPosts = await getAllPostPreviews();
+    const categories = listCategoriesWithCounts(allPosts);
+
+    return Object.keys(categories).map((category) => ({
+        params: { category },
+        props: {
+            posts: allPosts.filter((p) => p.data.category === category),
+        },
+    }));
+}
+
+const { category } = Astro.params;
+const { posts } = Astro.props;
+
+const breadcrumbs = {
+    past: [
+        { path: '/blog', label: 'Blog' },
+        { path: '/blog/categories', label: 'Categories' },
+    ],
+    current: allCategories[category!],
+};
+---
+
+<BlogLayout
+    title={`${allCategories[category!]} | Marta Makes Things`}
+    breadcrumbs={breadcrumbs}
+>
+    <h1>Category: {allCategories[category!]}</h1>
+
+    <section>
+        <div class='flex flex-col gap-4 pb-10 pt-5'>
+            {posts.map((post) => <PostPreviewDisplay post={post} />)}
+        </div>
+    </section>
+</BlogLayout>

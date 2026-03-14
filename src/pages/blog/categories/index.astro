@@ -1,0 +1,30 @@
+---
+import BlogLayout from '@/layouts/BlogLayout.astro';
+import CategoryRow from '@/components/molecules/CategoryRow.astro';
+import { getAllPostPreviews, listCategoriesWithCounts } from '@/lib/posts';
+
+const allPosts = await getAllPostPreviews();
+const categories = listCategoriesWithCounts(allPosts);
+
+const breadcrumbs = {
+    past: [{ path: '/blog', label: 'Blog' }],
+    current: 'Categories',
+};
+---
+
+<BlogLayout title='Categories | Marta Makes Things' breadcrumbs={breadcrumbs}>
+    <h1>Categories</h1>
+
+    <div class='mt-4 flex flex-col gap-2'>
+        {
+            Object.keys(categories)
+                .sort()
+                .map((category) => (
+                    <CategoryRow
+                        category={category}
+                        count={categories[category]}
+                    />
+                ))
+        }
+    </div>
+</BlogLayout>

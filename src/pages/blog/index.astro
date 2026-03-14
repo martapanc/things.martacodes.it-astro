@@ -1,0 +1,17 @@
+---
+import BlogLayout from '@/layouts/BlogLayout.astro';
+import PostPreviewDisplay from '@/components/PostPreviewDisplay.astro';
+import { getAllPostPreviews } from '@/lib/posts';
+
+const posts = await getAllPostPreviews();
+---
+
+<BlogLayout title='Blog | Marta Makes Things'>
+    <h1>Blog</h1>
+
+    <section>
+        <div class='flex flex-col gap-4 pb-10 pt-5'>
+            {posts.map((post) => <PostPreviewDisplay post={post} />)}
+        </div>
+    </section>
+</BlogLayout>

@@ -1,0 +1,13 @@
+---
+import SiteLayout from '@/layouts/SiteLayout.astro';
+import TravelBoard from '@/components/TravelBoard';
+import 'flag-icons/css/flag-icons.min.css';
+---
+
+<SiteLayout title='Travel | Marta Makes Things' headerText='Marta Travels'>
+    <div class='mb-6'>
+        <h1>Pics from around the World</h1>
+    </div>
+
+    <TravelBoard client:load />
+</SiteLayout>

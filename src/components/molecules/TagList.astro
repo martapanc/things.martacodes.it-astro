@@ -1,0 +1,35 @@
+---
+import { allTags } from '@/types/Post';
+
+interface Props {
+    tags: string[];
+    class?: string;
+}
+
+const { tags, class: className } = Astro.props;
+---
+
+{
+    tags.map((tag, index) => {
+        const hue = (index / tags.length) * 360;
+        // Use CSS variables so dark mode can be handled via Tailwind
+        return (
+            <a
+                href={`/blog/tags/${tag}`}
+                class={`w-fit rounded-md border-2 border-dark/40 px-2 py-1 hover:brightness-110 dark:border-dark/60 dark:hover:brightness-125 ${className ?? ''}`}
+                style={`--tag-hue: ${hue}`}
+            >
+                {allTags[tag]}
+            </a>
+        );
+    })
+}
+
+<style>
+    a {
+        background-color: hsl(var(--tag-hue), 65%, 70%);
+    }
+    :global(.dark) a {
+        background-color: hsl(var(--tag-hue), 60%, 15%);
+    }
+</style>

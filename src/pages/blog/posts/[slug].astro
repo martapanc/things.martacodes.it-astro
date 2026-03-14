@@ -1,0 +1,56 @@
+---
+import { getCollection } from 'astro:content';
+import BlogLayout from '@/layouts/BlogLayout.astro';
+import { Comments } from '@/components/Comments';
+import '@/styles/aoc.scss';
+
+export async function getStaticPaths() {
+    const posts = await getCollection('posts', ({ data }) => data.published);
+
+    // Sort by date to determine prev/next
+    const sorted = posts.sort(
+        (a, b) => a.data.date.valueOf() - b.data.date.valueOf()
+    );
+
+    return sorted.map((entry, index) => {
+        const prev = index > 0 ? sorted[index - 1] : null;
+        const next = index < sorted.length - 1 ? sorted[index + 1] : null;
+
+        return {
+            params: { slug: entry.slug },
+            props: {
+                entry,
+                previous: prev
+                    ? { slug: prev.slug, title: prev.data.title }
+                    : null,
+                next: next
+                    ? { slug: next.slug, title: next.data.title }
+                    : null,
+            },
+        };
+    });
+}
+
+const { entry, previous, next } = Astro.props;
+const { Content, headings } = await entry.render();
+
+// calcWordsAndReadingTime available if needed in layout via props
+
+const tocHeadings = entry.data.toc ? headings : [];
+---
+
+<BlogLayout
+    title={`${entry.data.title} | Marta Makes Things`}
+    description={entry.data.description}
+    image={entry.data.image}
+    headings={tocHeadings}
+    previous={previous}
+    next={next}
+    showComments={true}
+>
+    <article>
+        <Content />
+    </article>
+
+    <Comments client:visible slot='comments' />
+</BlogLayout>

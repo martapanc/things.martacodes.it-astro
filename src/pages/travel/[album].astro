@@ -1,0 +1,37 @@
+---
+import SiteLayout from '@/layouts/SiteLayout.astro';
+import PhotoGallery from '@/components/PhotoGallery';
+import { albums } from '@/data/albums';
+import { getTravelImages } from '@/lib/cloudinary';
+import 'flag-icons/css/flag-icons.min.css';
+
+export async function getStaticPaths() {
+    return albums.map((album) => ({
+        params: { album: album.id },
+        props: { album },
+    }));
+}
+
+const { album } = Astro.props;
+const photos = await getTravelImages(album.id);
+---
+
+<SiteLayout
+    title={`${album.title} | Marta Makes Things`}
+    headerText='Marta Travels'
+>
+    <div class='mb-6'>
+        <h1 class='flex gap-3'>
+            <span class='font-handwritten'>{album.title}</span>
+            <span class={`fi fi-${album.flag}`}></span>
+        </h1>
+    </div>
+
+    <section
+        class='w-auto rounded-xl bg-gradient-to-br from-slate-200 to-blue-100 drop-shadow-sm dark:from-slate-900 dark:to-sky-950'
+    >
+        <div class='layout relative flex w-full gap-5 px-4 py-8'>
+            <PhotoGallery images={photos} album={album.id} client:visible />
+        </div>
+    </section>
+</SiteLayout>

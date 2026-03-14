@@ -1,0 +1,17 @@
+---
+import SiteLayout from '@/layouts/SiteLayout.astro';
+import UpdateItem from '@/components/UpdateItem.astro';
+import { getAllUpdates } from '@/lib/posts';
+
+const updates = await getAllUpdates();
+---
+
+<SiteLayout title='Updates | Marta Makes Things' headerText='Marta Updates'>
+    <h1>Updates</h1>
+
+    <section>
+        <div class='flex flex-col gap-4 pb-10 pt-5'>
+            {updates.map((update) => <UpdateItem update={update} />)}
+        </div>
+    </section>
+</SiteLayout>

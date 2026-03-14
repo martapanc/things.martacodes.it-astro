@@ -1,0 +1,20 @@
+/* Shiki token styling for custom AoC language */
+/* Shiki uses the full scope name as the token class e.g. "keyword.other.hash.aoc" */
+.language-aoc {
+    /* Legacy highlight.js classes */
+    .hljs-dot { @apply text-gray-50/35; }
+    .hljs-hash { @apply text-slate-50; }
+    .hljs-up { @apply text-green-600; }
+    .hljs-pipe { @apply text-indigo-400; }
+    .hljs-caret { @apply text-blue-400; }
+    .hljs-at { @apply text-amber-500; }
+    .hljs-box { @apply text-orange-700; }
+}
+
+/* Shiki renders spans with class names based on token scope */
+.astro-code[data-language="aoc"] {
+    span[style*="color:#"] {
+        /* Override with our custom colors where Shiki assigns its defaults */
+    }
+}
+

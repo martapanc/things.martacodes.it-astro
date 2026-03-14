@@ -1,0 +1,50 @@
+---
+import CategoryRow from '@/components/molecules/CategoryRow.astro';
+import TagList from '@/components/molecules/TagList.astro';
+import TableOfContents from '@/components/TableOfContents.astro';
+
+interface Props {
+    categories: Record<string, number>;
+    tags: string[];
+    headings?: { depth: number; text: string; slug: string }[];
+}
+
+const { categories, tags, headings } = Astro.props;
+---
+
+<div class='flex flex-col gap-5'>
+    {
+        headings && headings.length > 0 && (
+            <div class='min-h-20 rounded-xl bg-white p-3 drop-shadow-sm dark:bg-dark'>
+                <TableOfContents headings={headings} />
+            </div>
+        )
+    }
+
+    <div class='min-h-20 rounded-xl bg-white p-3 drop-shadow-sm dark:bg-dark'>
+        <a href='/blog/categories'>
+            <h3 class='hover:text-indigo-700'>Categories</h3>
+        </a>
+        <div class='mt-2 flex flex-col gap-1.5'>
+            {
+                Object.keys(categories)
+                    .sort()
+                    .map((category) => (
+                        <CategoryRow
+                            category={category}
+                            count={categories[category]}
+                        />
+                    ))
+            }
+        </div>
+    </div>
+
+    <div class='min-h-20 rounded-xl bg-white p-3 drop-shadow-sm dark:bg-dark'>
+        <a href='/blog/tags'>
+            <h3 class='hover:text-indigo-700'>Tags</h3>
+        </a>
+        <div class='mt-2 flex flex-wrap gap-0.5'>
+            <TagList tags={tags} class='text-sm' />
+        </div>
+    </div>
+</div>

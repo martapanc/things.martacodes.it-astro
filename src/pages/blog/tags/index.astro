@@ -1,0 +1,21 @@
+---
+import BlogLayout from '@/layouts/BlogLayout.astro';
+import TagList from '@/components/molecules/TagList.astro';
+import { getAllPostPreviews, listTags } from '@/lib/posts';
+
+const allPosts = await getAllPostPreviews();
+const tags = listTags(allPosts);
+
+const breadcrumbs = {
+    past: [{ path: '/blog', label: 'Blog' }],
+    current: 'Tags',
+};
+---
+
+<BlogLayout title='Tags | Marta Makes Things' breadcrumbs={breadcrumbs}>
+    <h1>Tags</h1>
+
+    <div class='mt-4 flex flex-wrap gap-2'>
+        <TagList tags={tags} />
+    </div>
+</BlogLayout>

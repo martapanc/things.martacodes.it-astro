@@ -1,0 +1,49 @@
+---
+import meta from '@/data/meta.json';
+import { headerItems } from '@/data/Navigation';
+import ThemeToggle from '@/components/atoms/ThemeToggle';
+import MobileMenuIsland from '@/components/molecules/MobileMenuIsland';
+
+interface Props {
+    headerText?: string;
+}
+
+const { headerText } = Astro.props;
+const currentPath = Astro.url.pathname;
+---
+
+<header
+    class='sticky top-0 z-50 bg-gradient-to-r from-sky-300 to-blue-400 py-6 dark:from-sky-900 dark:to-blue-950'
+>
+    <div class='layout flex h-12 w-full items-center justify-between'>
+        <nav class='m-4 flex w-full items-center justify-between text-xl'>
+            <a
+                href='/'
+                class='w-48 font-bold text-slate-900 hover:text-slate-700 dark:text-blue-50 dark:hover:text-blue-200'
+            >
+                {headerText ?? meta.title}
+            </a>
+
+            <ul class='hidden items-center justify-between space-x-10 text-lg md:flex'>
+                {
+                    headerItems.map(({ href, label }) => (
+                        <li>
+                            <a
+                                href={href}
+                                class={`animated-underline-2 dark:animated-underline rounded-sm font-medium text-slate-950 dark:text-blue-50 ${currentPath.startsWith(href) ? 'font-bold' : ''}`}
+                            >
+                                {label}
+                            </a>
+                        </li>
+                    ))
+                }
+            </ul>
+
+            <div class='hidden md:flex md:flex-row'>
+                <ThemeToggle client:load />
+            </div>
+        </nav>
+
+        <MobileMenuIsland currentPath={currentPath} client:load />
+    </div>
+</header>

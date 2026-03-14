@@ -1,0 +1,86 @@
+---
+import SiteLayout from './SiteLayout.astro';
+import Sidebar from '@/components/Sidebar.astro';
+import Breadcrumbs from '@/components/molecules/Breadcrumbs.astro';
+import { getAllPostPreviews, listCategoriesWithCounts, listTags } from '@/lib/posts';
+
+interface Props {
+    title?: string;
+    description?: string;
+    image?: string;
+    breadcrumbs?: {
+        past: { path: string; label: string }[];
+        current?: string;
+    };
+    headings?: { depth: number; text: string; slug: string }[];
+    previous?: { slug: string; title: string } | null;
+    next?: { slug: string; title: string } | null;
+    showComments?: boolean;
+}
+
+const { title, description, image, breadcrumbs, headings, previous, next, showComments } = Astro.props;
+
+const allPosts = await getAllPostPreviews();
+const categories = listCategoriesWithCounts(allPosts);
+const tags = listTags(allPosts);
+---
+
+<SiteLayout title={title} description={description} image={image} headerText='Marta Writes'>
+    {breadcrumbs && <Breadcrumbs {...breadcrumbs} />}
+
+    <div class='grid grid-cols-1 gap-4 lg:grid-cols-[1fr_17.5rem]'>
+        <section class='w-full rounded-xl bg-white drop-shadow-sm dark:bg-dark'>
+            <div class='layout relative flex flex-col gap-3 py-6'>
+                <slot />
+            </div>
+        </section>
+
+        <div class='hidden lg:block'>
+            <Sidebar categories={categories} tags={tags} headings={headings} />
+        </div>
+    </div>
+
+    {
+        (previous || next) && (
+            <div class='grid grid-cols-1 gap-4 lg:grid-cols-[1fr_17.5rem]'>
+                <section class='grid w-full grid-cols-2 gap-4 pb-2 pt-4'>
+                    {previous ? (
+                        <a href={`/blog/posts/${previous.slug}`}>
+                            <div class='flex items-center gap-4 rounded-xl bg-white px-6 py-4 drop-shadow-sm hover:bg-slate-50 dark:bg-dark group transition justify-start'>
+                                <svg class='h-8 w-8 text-blue-800 transition-transform dark:text-blue-200 group-hover:-translate-x-2' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
+                                    <path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M15 19l-7-7 7-7' />
+                                </svg>
+                                <span class='text-md max-w-[400px] truncate'>{previous.title}</span>
+                            </div>
+                        </a>
+                    ) : (
+                        <div />
+                    )}
+                    {next && (
+                        <a href={`/blog/posts/${next.slug}`}>
+                            <div class='flex items-center gap-4 rounded-xl bg-white px-6 py-4 drop-shadow-sm hover:bg-slate-50 dark:bg-dark group transition justify-end'>
+                                <span class='text-md max-w-[400px] truncate'>{next.title}</span>
+                                <svg class='h-8 w-8 text-blue-800 transition-transform dark:text-blue-200 group-hover:translate-x-2' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
+                                    <path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M9 5l7 7-7 7' />
+                                </svg>
+                            </div>
+                        </a>
+                    )}
+                </section>
+                <div />
+            </div>
+        )
+    }
+
+    {
+        showComments && (
+            <div class='grid grid-cols-1 gap-4 lg:grid-cols-[1fr_17.5rem]'>
+                <div>
+                    {/* Comments React island inserted by page */}
+                    <slot name='comments' />
+                </div>
+                <div />
+            </div>
+        )
+    }
+</SiteLayout>

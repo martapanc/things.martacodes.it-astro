@@ -1,0 +1,20 @@
+---
+interface Props {
+    accent?: boolean;
+    size?: 'sm' | 'default';
+}
+
+const { accent = false, size = 'default' } = Astro.props;
+
+const colors = accent
+    ? 'bg-indigo-600/20 dark:bg-indigo-600/40 text-indigo-700/70 dark:text-indigo-100/80'
+    : 'bg-slate-900/10 dark:bg-white/10 text-black/55 dark:text-white/55';
+
+const sizeClasses = size === 'sm' ? 'h-5 w-5' : 'h-6 w-6';
+---
+
+<div
+    class={`mr-1 flex items-center justify-center rounded-md transition ${sizeClasses} ${colors}`}
+>
+    <slot />
+</div>

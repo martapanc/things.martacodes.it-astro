@@ -1,0 +1,15 @@
+---
+import SiteLayout from '@/layouts/SiteLayout.astro';
+import FoodGallery from '@/components/FoodGallery';
+import { getFoodImages } from '@/lib/cloudinary';
+
+const photos = await getFoodImages();
+---
+
+<SiteLayout title='Food | Marta Makes Things' headerText='Marta Cooks'>
+    <div class='mb-6'>
+        <h1>Adventures in the kitchen</h1>
+    </div>
+
+    <FoodGallery photos={photos} client:load />
+</SiteLayout>

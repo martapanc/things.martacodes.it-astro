@@ -1,0 +1,38 @@
+---
+interface BreadcrumbItem {
+    path: string;
+    label: string;
+}
+
+interface Props {
+    past: BreadcrumbItem[];
+    current?: string;
+}
+
+const { past, current } = Astro.props;
+---
+
+<nav aria-label='breadcrumb' class='mb-4 text-sm'>
+    <ol class='flex flex-wrap items-center gap-1 text-slate-600 dark:text-slate-400'>
+        {
+            past.map((item) => (
+                <>
+                    <li>
+                        <a
+                            href={item.path}
+                            class='text-slate-900 hover:underline dark:text-slate-200'
+                        >
+                            {item.label}
+                        </a>
+                    </li>
+                    <li aria-hidden='true'>/</li>
+                </>
+            ))
+        }
+        {
+            current && (
+                <li class='text-slate-500 dark:text-slate-500'>{current}</li>
+            )
+        }
+    </ol>
+</nav>
