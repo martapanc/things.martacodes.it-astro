@@ -46,18 +46,19 @@
 }
 
 /* Dark theme */
-[data-theme='dark'] {
+.dark {
     --background: #0c1018;
     --foreground: white;
 }
 
 @layer base {
-    .light > body {
+    :not(.dark) > body {
         background-color: #f9f9f9;
     }
 
     .dark > body {
         background-color: #011125;
+        color: white;
     }
 
     .font-primary {

@@ -10,6 +10,7 @@ import remarkA11yEmoji from '@fec/remark-a11y-emoji';
 import rehypeSlug from 'rehype-slug';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import { aocLang } from './src/lib/shiki-aoc-lang.ts';
+import { aocTransformer } from './src/lib/shiki-aoc-transformer.ts';
 
 export default defineConfig({
     site: 'https://things.martacodes.it',
@@ -34,6 +35,7 @@ export default defineConfig({
             shikiConfig: {
                 theme: 'tokyo-night',
                 langs: [aocLang],
+                transformers: [aocTransformer()],
             },
         }),
         sitemap(),

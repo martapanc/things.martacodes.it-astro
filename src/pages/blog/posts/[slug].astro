@@ -1,13 +1,15 @@
 ---
 import { getCollection } from 'astro:content';
 import BlogLayout from '@/layouts/BlogLayout.astro';
+import PostHeader from '@/components/PostHeader.astro';
 import { Comments } from '@/components/Comments';
+import { allCategories } from '@/types/Post';
 import '@/styles/aoc.scss';
 
 export async function getStaticPaths() {
     const posts = await getCollection('posts', ({ data }) => data.published);
 
-    // Sort by date to determine prev/next
+    // Sort by date ascending to determine prev/next
     const sorted = posts.sort(
         (a, b) => a.data.date.valueOf() - b.data.date.valueOf()
     );
@@ -34,20 +36,32 @@ export async function getStaticPaths() {
 const { entry, previous, next } = Astro.props;
 const { Content, headings } = await entry.render();
 
-// calcWordsAndReadingTime available if needed in layout via props
-
 const tocHeadings = entry.data.toc ? headings : [];
+
+const breadcrumbs = {
+    past: [
+        { path: '/blog', label: 'Blog' },
+        {
+            path: `/blog/categories/${entry.data.category ?? 'uncategorized'}`,
+            label: allCategories[entry.data.category] ?? 'Uncategorized',
+        },
+    ],
+    current: entry.data.title,
+};
 ---
 
 <BlogLayout
     title={`${entry.data.title} | Marta Makes Things`}
     description={entry.data.description}
     image={entry.data.image}
+    breadcrumbs={breadcrumbs}
     headings={tocHeadings}
     previous={previous}
     next={next}
     showComments={true}
 >
+    <PostHeader entry={entry} body={entry.body ?? ''} />
+
     <article>
         <Content />
     </article>
