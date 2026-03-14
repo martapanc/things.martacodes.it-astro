@@ -14,13 +14,13 @@ I'm fairly sure I spent way more time than necessary on today's task, and the re
 
 It's time to run some overdue **fragmentation** on our Historian's computer, except the disk map looks like this:
 
-```bash
+```text
 2333133121414131402
 ```
 
 The way it works is, numbers on odd indices represent files, and number on even indices are blocks of free space; therefore, the example above can be expanded like this:
 
-```bash
+```text
 00...111...2...333.44.5555.6666.777.888899
 ```
 
@@ -29,7 +29,7 @@ Starting from the right-most block of files, we need to move one unit at a time 
 
 Here's a simpler example (expanded from `12345`) in order to save space, with all the passages:
 
-```bash
+```text
 0..111....22222
 02.111....2222.
 022111....222..
@@ -150,7 +150,7 @@ while (expandedDisk.some((block) => '.' in block)) {
 
 If this already looks complicated, wait until you read about part 2, which as usual has a twist…
 
-```bash
+```text
 00...111...2...333.44.5555.6666.777.888899
 0099.111...2...333.44.5555.6666.777.8888..
 0099.1117772...333.44.5555.6666.....8888..

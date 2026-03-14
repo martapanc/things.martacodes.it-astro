@@ -47,7 +47,7 @@ function calcNthSecretNumber(input: number, n: number) {
 
 Moving to part 2, we learn that the secret numbers don't actually represent the price for the bananas - only their ones digit does. So, if a buyer starts with a secret number of `123`, that buyer's first few *prices* would be:
 
-```bash
+```text
 3 (from 123)
 0 (from 15887950)
 6 (from 16495136)
@@ -56,7 +56,7 @@ Moving to part 2, we learn that the secret numbers don't actually represent the 
 
 There's a catch, however: monkeys don't seem to understand the value of the prices but only the **changes** in prices. For example, the `123` buyer's first 10 secret numbers, prices, and associated changes would be:
 
-```bash
+```text
      123: 3
 15887950: 0 (-3)
 16495136: 6 (6)
@@ -110,7 +110,7 @@ initial.forEach((num) => {
 
 The outcome at the end of this is a map of all possible sequences of 4 consecutive differences, each mapped to a list the prices resulting from such sequence (so we can have multiple prices if the same sequence occurs in the list of secret numbers of multiple buyers).
 
-```bash
+```text
 ...
 -3, -2,  3, -3: [2] 	// One buyer includes the sequence, resulting in a price of 2
 -2,  2, -3,  3: [5, 7]  // Two buyers include the sequence, resulting in prices of 5 and 7 respectively

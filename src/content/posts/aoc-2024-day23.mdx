@@ -19,7 +19,7 @@ This is especially true for days like this where solving the problem doesn’t r
 
 Today's input consists of a list of connections between computers - essentially a network map:
 
-```bash
+```text
 kh-tc
 de-co
 qp-kh
@@ -36,7 +36,7 @@ ta-ka
 
 The goal for now is to find sets of **three inter-connected computers** (i.e. where each computer is connected to the other two). For instance, in the portion of input above we can observe a couple:
 
-```bash
+```text
 co,ka,ta
 de,ka,ta
 ```
@@ -62,7 +62,7 @@ function getAdjacencyList(lines: string[]) {
 
 After running this, we get a list where each item is linked to a list of all connected nodes from our input. For example:
 
-```bash
+```text
 kh: [tc, qp, ub, ta]
 tc: [kh, wh, td, co]
 ...

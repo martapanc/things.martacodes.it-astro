@@ -19,7 +19,7 @@ The input for today's puzzle is composed as follows:
 - a list of wires named `x00` through `xN` and `y00` through `yN`
 - a list of logic operations featuring either `AND`, `OR` or `XOR`
 
-```bash
+```text
 x00: 1
 x01: 1
 x02: 1
@@ -34,7 +34,7 @@ x02 OR y02 -> z02
 
 The larger example we're given and the real input include not only logical gates with `x` and `y`, but also others such as
 
-```bash
+```text
 ntg XOR fgs -> mjb
 y02 OR x01 -> tnw
 gnj AND wpb -> z02
@@ -42,7 +42,7 @@ gnj AND wpb -> z02
 
 First things first, we need to solve all the logic gates and eventually obtain the values for the wires named `z00` through `zN`. In fact, the `z` wires form a binary number, obtained combining the bits from `zN` to `z00` (which is the least significant bit):
 
-```bash
+```text
 z00: 0
 z01: 0
 z02: 0
