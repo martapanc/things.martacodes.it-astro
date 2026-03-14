@@ -1,6 +1,7 @@
 ---
 import { render, type CollectionEntry } from 'astro:content';
 import BgIcon from '@/components/atoms/BgIcon.astro';
+import {formatDate} from "@/lib/posts.ts";
 
 interface Props {
     update: CollectionEntry<'updates'>;
@@ -9,17 +10,13 @@ interface Props {
 const { update } = Astro.props;
 const { Content } = await render(update);
 
-const formattedDate = update.data.date.toLocaleDateString('en-GB', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-});
+const formattedDate = formatDate(update.data.date);
 ---
 
 <div
     id={update.id}
     data-tags={update.data.tags.join(',')}
-    class='duration-400 h-auto rounded-2xl bg-slate-100 p-4 transition ease-in-out dark:bg-slate-900'
+    class='duration-400 h-auto rounded-2xl bg-slate-100 p-4 transition ease-in-out dark:bg-slate-900 drop-shadow-sm'
 >
     <div class='flex h-full flex-col gap-5 lg:flex-row'>
         <div

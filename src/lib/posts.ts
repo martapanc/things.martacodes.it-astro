@@ -42,10 +42,12 @@ export function calcWordsAndReadingTime(content: string) {
 }
 
 export function formatDate(date: Date): string {
-    return date.toLocaleDateString('en-GB', {
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric',
-        // "1st January, 2024" style
-    });
+    const day = date.getDate();
+    const suffix =
+        day % 100 >= 11 && day % 100 <= 13
+            ? 'th'
+            : ['th', 'st', 'nd', 'rd'][Math.min(day % 10, 4)] ?? 'th';
+    const month = date.toLocaleDateString('en-GB', { month: 'long' });
+    const year = date.getFullYear();
+    return `${day}${suffix} ${month}, ${year}`;
 }
