@@ -1,9 +1,9 @@
 import type { IconType } from 'react-icons';
+import { FaLinkedin } from 'react-icons/fa';
 import {
     SiGithub,
     SiGoodreads,
     SiInstagram,
-    SiLinkedin,
     SiMedium,
     SiSteam,
     SiThreads,
@@ -60,7 +60,7 @@ export const socialLinks: SocialLink[] = [
     },
     {
         href: 'https://www.linkedin.com/in/martapancaldi',
-        icon: SiLinkedin,
+        icon: FaLinkedin,
         id: 'Linkedin',
     },
     {

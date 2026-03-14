@@ -1,5 +1,5 @@
 ---
-import { getCollection } from 'astro:content';
+import { getCollection, render } from 'astro:content';
 import BlogLayout from '@/layouts/BlogLayout.astro';
 import PostHeader from '@/components/PostHeader.astro';
 import { Comments } from '@/components/Comments';
@@ -19,14 +19,14 @@ export async function getStaticPaths() {
         const next = index < sorted.length - 1 ? sorted[index + 1] : null;
 
         return {
-            params: { slug: entry.slug },
+            params: { slug: entry.id },
             props: {
                 entry,
                 previous: prev
-                    ? { slug: prev.slug, title: prev.data.title }
+                    ? { slug: prev.id, title: prev.data.title }
                     : null,
                 next: next
-                    ? { slug: next.slug, title: next.data.title }
+                    ? { slug: next.id, title: next.data.title }
                     : null,
             },
         };
@@ -34,7 +34,7 @@ export async function getStaticPaths() {
 }
 
 const { entry, previous, next } = Astro.props;
-const { Content, headings } = await entry.render();
+const { Content, headings } = await render(entry);
 
 const tocHeadings = entry.data.toc ? headings : [];
 

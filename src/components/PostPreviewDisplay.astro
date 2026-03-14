@@ -19,7 +19,7 @@ const formattedDate = formatDate(post.data.date);
         <div
             class='relative flex h-52 w-full md:h-72 lg:h-auto lg:w-[20rem] xl:w-[16rem]'
         >
-            <a href={`/blog/posts/${post.slug}`}>
+            <a href={`/blog/posts/${post.id}`}>
                 <img
                     alt='Post preview image'
                     src={post.data.image ?? 'https://picsum.photos/300/250'}
@@ -73,7 +73,7 @@ const formattedDate = formatDate(post.data.date);
                         {formattedDate}
                     </span>
                 </div>
-                <a href={`/blog/posts/${post.slug}`}>
+                <a href={`/blog/posts/${post.id}`}>
                     <div class='mb-3'>
                         <h1 class='hover:text-indigo-500'>{post.data.title}</h1>
                     </div>

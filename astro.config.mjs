@@ -14,14 +14,19 @@ import { aocTransformer } from './src/lib/shiki-aoc-transformer.ts';
 
 export default defineConfig({
     site: 'https://things.martacodes.it',
-    legacy: {
-        collections: true,
-    },
     image: {
         // We use Cloudinary for images, skip Astro's built-in image optimization
         service: { entrypoint: 'astro/assets/services/noop' },
     },
     vite: {
+        resolve: {
+            alias: [
+                {
+                    find: /^@theme-toggles\/react$/,
+                    replacement: '@theme-toggles/react/dist/index.js',
+                },
+            ],
+        },
         ssr: {
             noExternal: ['@theme-toggles/react'],
         },

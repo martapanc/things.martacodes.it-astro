@@ -1,12 +1,12 @@
 ---
-import type { CollectionEntry } from 'astro:content';
+import { render, type CollectionEntry } from 'astro:content';
 
 interface Props {
     update: CollectionEntry<'updates'>;
 }
 
 const { update } = Astro.props;
-const { Content } = await update.render();
+const { Content } = await render(update);
 
 const formattedDate = update.data.date.toLocaleDateString('en-GB', {
     day: 'numeric',
@@ -16,7 +16,7 @@ const formattedDate = update.data.date.toLocaleDateString('en-GB', {
 ---
 
 <div
-    id={update.slug}
+    id={update.id}
     class='duration-400 my-3 h-auto rounded-2xl bg-slate-100 p-4 transition ease-in-out dark:bg-slate-900'
 >
     <div class='flex h-full flex-col gap-5 lg:flex-row'>
