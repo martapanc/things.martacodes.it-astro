@@ -6,7 +6,7 @@ published: true
 tags:
     - work
     - travel
-image: 'https://res.cloudinary.com/dwrurydlt/image/upload/v1773517230/manchester_fg28tw.webp'
+image: 'https://res.cloudinary.com/dwrurydlt/image/upload/v1773517230/Updates/manchester_fg28tw.webp'
 ---
 
 Having lived in Manchester (the UK one, with the rain and the football) for several years, I found it mildly amusing to then fly to Massachusetts for our autumn team offsite and end up in… Manchester-by-the-Sea. Different vibe, I'll admit.

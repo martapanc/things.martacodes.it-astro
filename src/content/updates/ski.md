@@ -6,7 +6,7 @@ published: true
 tags:
     - life
     - travel
-image: 'https://res.cloudinary.com/dwrurydlt/image/upload/v1773517230/ski_gllww1.webp'
+image: 'https://res.cloudinary.com/dwrurydlt/image/upload/v1773517230/Updates/ski_gllww1.webp'
 ---
 
 Something I'd put off for years — always assuming it was one of those things you needed to start as a kid — I finally went skiing for the first time at 30! Went with a group of friends to the mountains, and we signed up for lessons for the first couple of days. Sensible decision.

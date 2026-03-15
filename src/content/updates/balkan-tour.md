@@ -5,7 +5,7 @@ date: 2025-09-10T12:00:00.000Z
 published: true
 tags:
     - travel
-image: https://res.cloudinary.com/dwrurydlt/image/upload/v1772965346/IMG_1295_walyn2.webp
+image: https://res.cloudinary.com/dwrurydlt/image/upload/v1772965346/Updates/IMG_1295_walyn2.webp
 ---
 
 Something I’d been wanting to do for years — ever since a coach tour across Spain and Portugal many years ago — I finally did a Balkan tour! 🎉
