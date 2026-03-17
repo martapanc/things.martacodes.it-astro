@@ -17,7 +17,7 @@ const ThemeToggle = () => {
     };
 
     return (
-        <div className='flex w-full justify-center'>
+        <div className='flex w-full justify-center sm:justify-end'>
             {/* @ts-expect-error: required props */}
             <Expand
                 toggle={toggle}
