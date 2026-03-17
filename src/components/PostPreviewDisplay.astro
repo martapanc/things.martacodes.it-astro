@@ -14,11 +14,11 @@ const formattedDate = formatDate(post.data.date);
 ---
 
 <div
-    class='duration-400 lg:h-68 h-fit rounded-2xl bg-slate-100 p-4 transition ease-in-out dark:bg-slate-900 xl:h-56'
+    class='duration-400 lg:h-68 h-fit rounded-2xl border border-slate-200 bg-[#fefefe] p-4 transition ease-in-out hover:-translate-y-0.5 hover:shadow-md dark:border-slate-700/50 dark:bg-slate-900 xl:h-56'
 >
     <div class='flex h-full flex-col gap-5 lg:flex-row'>
         <div
-            class='relative flex h-52 w-full md:h-72 lg:h-auto lg:w-[20rem] xl:w-[16rem]'
+            class='relative flex h-52 w-full overflow-hidden rounded-xl md:h-72 lg:h-auto lg:w-[20rem] xl:w-[16rem]'
         >
             <a href={`/blog/posts/${post.id}`}>
                 <img
@@ -33,10 +33,10 @@ const formattedDate = formatDate(post.data.date);
                 <div
                     class='mb-2 flex flex-col items-start gap-1 sm:flex-row sm:justify-between'
                 >
-                    <span class='flex gap-1.5'>
+                    <span class='flex gap-1.5 items-center'>
                         <BgIcon icon='fa6-solid:tag' accent />
                         <a
-                            class='animated-underline focus-visible:ring-primary-300 rounded-sm text-sm font-medium text-blue-950 focus:outline-none focus-visible:ring dark:text-gray-200'
+                            class='focus-visible:ring-primary-300 rounded-full bg-blue-50 px-2 py-0.5 text-xs font-semibold text-blue-700 focus:outline-none focus-visible:ring dark:bg-blue-950 dark:text-blue-300'
                             href={`/blog/categories/${post.data.category ?? 'uncategorized'}`}
                             aria-label={allCategories[post.data.category]}
                         >
@@ -71,12 +71,12 @@ const formattedDate = formatDate(post.data.date);
                 </div>
                 {
                     post.data.tags && post.data.tags.length > 0 && (
-                        <div class='flex flex-wrap gap-1'>
+                        <div class='flex flex-wrap gap-1.5 items-center'>
                             <BgIcon icon='fa6-solid:hashtag' accent />
                             {post.data.tags.map((tag) => (
                                 <a
                                     href={`/blog/tags/${tag}`}
-                                    class='rounded-md bg-indigo-300 px-1 py-0.5 text-sm font-semibold hover:brightness-110 dark:bg-indigo-900 dark:text-white dark:hover:brightness-125 sm:py-0 lg:text-base'
+                                    class='rounded-full border border-indigo-200 bg-indigo-50 px-2 py-0.5 text-xs font-medium text-indigo-600 transition-colors hover:bg-indigo-100 dark:border-indigo-800 dark:bg-indigo-950/50 dark:text-indigo-400 dark:hover:bg-indigo-900/50'
                                 >
                                     {allTags[tag]}
                                 </a>

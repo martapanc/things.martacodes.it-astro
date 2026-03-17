@@ -6,9 +6,9 @@ interface FoodGalleryProps {
 
 const PhotoWithCaption = ({ photo }: { photo: ImageProps }) => {
     return (
-        <div className='group relative'>
+        <div className='group relative overflow-hidden rounded-xl'>
             <img src={photo.src} alt={photo.alt ?? 'food photo'} />
-            <div className='absolute bottom-3 flex h-fit min-h-12 w-full items-center justify-center bg-zinc-900/75 px-4 py-1 text-center font-handwritten-2 text-lg text-white opacity-0 transition-opacity duration-200 group-hover:opacity-100 group-hover:shadow-md'>
+            <div className='absolute bottom-3 flex h-fit min-h-12 w-full translate-y-1 items-center justify-center bg-zinc-900/75 px-4 py-1 text-center font-handwritten-2 text-lg text-white opacity-0 transition-all duration-200 group-hover:translate-y-0 group-hover:opacity-100 group-hover:shadow-md'>
                 {photo.alt}
             </div>
         </div>

@@ -18,7 +18,7 @@ const AlbumPreview = ({ album }: { album: (typeof albums)[0] }) => {
     return (
         <a
             href={`/travel/${album.id}`}
-            className={`flex transform flex-col bg-white p-2 text-end font-handwritten transition-all duration-300 hover:scale-[1.033] hover:shadow-xl dark:hover:shadow-slate-200/5 ${randomRotation}`}
+            className={`flex transform flex-col bg-white p-2 text-end font-handwritten shadow-sm transition-all duration-300 hover:scale-[1.033] hover:shadow-xl dark:hover:shadow-slate-200/5 ${randomRotation}`}
         >
             <div className='relative h-52 w-full sm:h-60 lg:h-44'>
                 <img
@@ -38,7 +38,7 @@ const AlbumPreview = ({ album }: { album: (typeof albums)[0] }) => {
 const TravelBoard = () => {
     return (
         <section className='w-auto rounded-xl bg-photo-gradient drop-shadow-lg dark:bg-dark'>
-            <div className='layout relative flex flex-col gap-5 px-2 py-6'>
+            <div className='layout relative flex flex-col gap-5 px-2 py-10'>
                 <div className='grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 lg:gap-6 xl:grid-cols-4'>
                     {albums.map((album, index) => (
                         <AlbumPreview key={index} album={album} />
