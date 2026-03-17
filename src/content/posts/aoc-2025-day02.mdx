@@ -1,0 +1,119 @@
+---
+title: 'Repeated ID Patterns'
+description: 'Advent of Code 2025: Day 2 — finding IDs with repeating digit chunks in a range'
+slug: aoc-2025-day02
+date: 2025-12-02T12:00:00.000Z
+published: true
+category: advent-of-code
+tags:
+    - aoc2025
+image: 'https://res.cloudinary.com/dwrurydlt/image/upload/v1733678871/Blog/aoc_k6dkti.webp'
+---
+
+Day 2 is all about spotting patterns in numbers 🔢
+
+The input is a single comma-separated list of number ranges:
+
+```plain
+11-22,95-115,200-250,1000-1500
+```
+
+We need to find "invalid IDs" – numbers whose digit sequences follow a specific repetition rule.
+
+## Part 1
+
+For Part 1, an ID is invalid if its digit string can be split exactly in half, and both halves are identical. So `1221` is invalid (halves: `12` and `12`), and `123123` is invalid too (halves: `123` and `123`). Odd-length numbers are always skipped since they can't be split evenly.
+
+```ts
+function findInvalidIdsTwiceRule(ranges: NumRange[]): number {
+    let invalidIdSum = 0;
+    ranges.forEach(({ from, to }) => {
+        for (let n = from; n <= to; n++) {
+            const numAsString = `${n}`;
+            if (numAsString.length % 2 !== 0)
+                continue;
+
+            const mid = numAsString.length / 2;
+            const firstHalf = numAsString.slice(0, mid);
+            const secondHalf = numAsString.slice(mid);
+            if (firstHalf === secondHalf)
+                invalidIdSum += n;
+        }
+    })
+    return invalidIdSum;
+}
+```
+
+Pretty clean! Convert the number to a string, check even length, split, compare.
+
+---
+
+## Part 2
+
+Part 2 generalises the rule: an ID is invalid if its digits can be split into **k equal chunks** (for any k ≥ 2) where all chunks are identical. So now `111` is invalid (k=3, chunk `1`), `112112` is invalid (k=2, chunk `112`), and so on.
+
+The key is only trying divisors of the digit length — there's no point trying chunk sizes that don't divide evenly. I also added a couple of helpers:
+
+```ts
+export const divisors = (num: number) => [...Array(num)]
+    .map((_,i) => i)
+    .filter(x => num % x === 0).slice(1);
+
+export function chunkString(str: string, size: number): string[] {
+    if (size <= 0) return [str];
+    const regex = new RegExp(`.{1,${size}}`, 'g');
+    return str.match(regex) || [];
+}
+```
+
+And the main function iterates k from 2 up to the digit length, checking if the string splits into k identical pieces:
+
+```ts
+function findInvalidIdsNTimesRule(ranges: NumRange[]): number {
+    let invalidIdSum = 0;
+    ranges.forEach(({ from, to }) => {
+        for (let n = from; n <= to; n++) {
+            const s = `${n}`;
+            const len = s.length;
+
+            for (let k = 2; k <= len; k++) {
+                if (len % k !== 0) continue;
+                const chunkSize = len / k;
+                const first = s.slice(0, chunkSize);
+                let equal = true;
+                for (let i = 1; i < k; i++) {
+                    if (s.slice(i * chunkSize, (i + 1) * chunkSize) !== first) {
+                        equal = false;
+                        break;
+                    }
+                }
+                if (equal) { invalidIdSum += n; break; }
+            }
+        }
+    });
+    return invalidIdSum;
+}
+```
+
+The `break` after finding a match avoids double-counting IDs that satisfy the rule for multiple values of k. 
+
+Two more stars for me !⭐⭐
+
+---
+
+<div className='flex flex-col gap-2'>
+    <a
+        className='gh-link'
+        href='https://github.com/martapanc/Advent-of-Code/blob/master/2024-2025/src/2025/day02/day02.ts'
+        target='_blank'
+    >
+        Day02 on GitHub
+    </a>
+    <a
+        className='gh-link'
+        href='https://github.com/martapanc/Advent-of-Code/blob/master/2024-2025/src/2025/README.md'
+        target='_blank'
+    >
+        AoC 2025 Overview
+    </a>
+</div>

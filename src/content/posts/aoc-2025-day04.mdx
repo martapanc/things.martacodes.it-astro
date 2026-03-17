@@ -1,0 +1,94 @@
+---
+title: 'Unrolling the Paper Rolls'
+description: 'Advent of Code 2025: Day 4 — removing accessible paper rolls from a grid iteratively'
+slug: aoc-2025-day04
+date: 2025-12-04T12:00:00.000Z
+published: true
+category: advent-of-code
+tags:
+    - aoc2025
+image: 'https://res.cloudinary.com/dwrurydlt/image/upload/v1733678871/Blog/aoc_k6dkti.webp'
+---
+
+Day 4 gives us a fun grid puzzle! 📜 
+
+We have a 2D grid filled with `@` (paper rolls) and `.` (empty space).
+
+```plain
+@.@@.@@@..
+@@..@.@.@.
+.@.@@..@.@
+@@.@.@@@..
+.@@@..@.@@
+```
+
+A paper roll is **accessible** if it has fewer than 4 adjacent `@` neighbours (using 4-directional adjacency – no diagonals).
+
+## Part 1
+
+Simple enough — just count how many `@` cells have fewer than 4 `@` neighbours:
+
+```ts
+function getRollCoords(grid: Map<string, string>): Coord[] {
+    let paperRolls: Coord[] = [];
+    grid.forEach((value, coord) => {
+        if (value === '@') {
+            const adjacentCells = getNeighbors(Coord.deserialize(coord), grid, true);
+            const rolls = adjacentCells.filter(cell => cell === '@').length;
+            if (rolls < 4)
+                paperRolls.push(Coord.deserialize(coord));
+        }
+    });
+    return paperRolls;
+}
+
+function findAccessiblePaperRolls(grid: Grid) {
+    return getRollCoords(grid).length;
+}
+```
+
+The `getNeighbors` utility returns the values of all orthogonal neighbours. The `true` flag means we only get cells that exist in the grid (no out-of-bounds). Any `@` with fewer than 4 `@` neighbours is accessible – boundary cells are naturally accessible since they have fewer neighbours overall.
+
+---
+
+## Part 2
+
+Part 2 asks for the total number of rolls removed across **all rounds** of a peeling process: each round, we find all currently accessible rolls, remove them (replacing `@` with `.`), and then repeat until no accessible rolls remain.
+
+```ts
+function findAndRemoveAccessiblePaperRolls(grid: Grid) {
+    let totalAccessiblePaperRolls = 0;
+
+    let paperRollCoords: Coord[] = getRollCoords(grid);
+    while (paperRollCoords.length > 0) {
+        totalAccessiblePaperRolls += paperRollCoords.length;
+
+        paperRollCoords.forEach((p) => grid.set(p.serialize(), '.'));
+
+        paperRollCoords = getRollCoords(grid);
+    }
+
+    return totalAccessiblePaperRolls;
+}
+```
+
+This is a classic "onion peeling" algorithm – each iteration strips away the outermost accessible layer, making previously interior rolls accessible in the next round. The loop continues until there's nothing left to remove (or only rolls with 4 `@` neighbours remain). ⭐⭐
+
+---
+
+<div className='flex flex-col gap-2'>
+    <a
+        className='gh-link'
+        href='https://github.com/martapanc/Advent-of-Code/blob/master/2024-2025/src/2025/day04/day04.ts'
+        target='_blank'
+    >
+        Day04 on GitHub
+    </a>
+    <a
+        className='gh-link'
+        href='https://github.com/martapanc/Advent-of-Code/blob/master/2024-2025/src/2025/README.md'
+        target='_blank'
+    >
+        AoC 2025 Overview
+    </a>
+</div>

@@ -1,0 +1,110 @@
+---
+title: 'Fitting Shapes into Regions'
+description: 'Advent of Code 2025: Day 12 — checkerboard parity and knapsack DP for tetromino region fitting'
+slug: aoc-2025-day12
+date: 2025-12-12T12:00:00.000Z
+published: true
+category: advent-of-code
+tags:
+    - aoc2025
+image: 'https://res.cloudinary.com/dwrurydlt/image/upload/v1733678871/Blog/aoc_k6dkti.webp'
+---
+
+Day 12 is a shape-fitting puzzle – think tetrominos meeting combinatorics! 🧩
+
+The input defines shapes (as `#`-filled grids) and rectangular regions with counts of each shape to place:
+
+```plain
+0:
+##
+#.
+
+1:
+###
+
+4x4: 0 0 0 0 2 0
+3x3: 1 1 0 1 0 0
+```
+
+## Part 1 (only!)
+
+A region is **fittable** if the given shapes can fill it completely. Two conditions must both hold:
+
+**Condition 1 – Area**: the total area of all shapes × their counts must equal the region's area.
+
+**Condition 2 – Checkerboard parity**: imagine colouring the region like a chessboard (alternating black/white squares). Each shape has its own imbalance — the absolute difference between its black and white squares. The shapes' combined imbalances must be able to match the region's own imbalance.
+
+First, we analyse each shape:
+
+```ts
+function analyzeShape(grid: string[]): ShapeInfo {
+    let area = 0;
+    let black = 0;
+    let white = 0;
+    for (let y = 0; y < grid.length; y++) {
+        for (let x = 0; x < grid[y].length; x++) {
+            if (grid[y][x] !== "#") continue;
+            area++;
+            if ((x + y) % 2 === 0) black++;
+            else white++;
+        }
+    }
+    return {area, imbalance: Math.abs(black - white)};
+}
+```
+
+Then we use a **knapsack-style DP** to check whether the imbalances of the chosen shapes can combine to match the board's imbalance. The DP tracks a set of achievable net imbalances – for each shape type, we can shift the imbalance up or down by its contribution:
+
+```ts
+function canMatchImbalance(counts: number[], shapes: ShapeInfo[], boardImbalance: number): boolean {
+    let maxSum = 0;
+    for (let i = 0; i < counts.length; i++) {
+        maxSum += counts[i] * shapes[i].imbalance;
+    }
+    if (maxSum === 0) return boardImbalance === 0;
+
+    const offset = maxSum;
+    let possible = new Array<boolean>(2 * maxSum + 1).fill(false);
+    possible[offset] = true; // start at 0 net imbalance
+
+    for (let i = 0; i < counts.length; i++) {
+        const count = counts[i];
+        const d = shapes[i].imbalance;
+        if (count === 0 || d === 0) continue;
+        const next = new Array<boolean>(2 * maxSum + 1).fill(false);
+        for (let sum = -count * d; sum <= count * d; sum += 2 * d) {
+            for (let idx = 0; idx < possible.length; idx++) {
+                if (!possible[idx]) continue;
+                const target = idx + sum;
+                if (target >= 0 && target < next.length) next[target] = true;
+            }
+        }
+        possible = next;
+    }
+
+    return possible[offset + boardImbalance] ?? false;
+}
+```
+
+The offset trick shifts the imbalance range into non-negative indices – we start at `possible[offset]` (representing net imbalance = 0) and spread outward. 
+
+… And that's it! Having completed all daily challenges so far, I get the 24th star ⭐ for free – so including all the previous years, that's 524 in total, baby 😎
+
+---
+
+<div className='flex flex-col gap-2'>
+    <a
+        className='gh-link'
+        href='https://github.com/martapanc/Advent-of-Code/blob/master/2024-2025/src/2025/day12/day12.ts'
+        target='_blank'
+    >
+        Day12 on GitHub
+    </a>
+    <a
+        className='gh-link'
+        href='https://github.com/martapanc/Advent-of-Code/blob/master/2024-2025/src/2025/README.md'
+        target='_blank'
+    >
+        AoC 2025 Overview
+    </a>
+</div>

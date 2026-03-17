@@ -1,0 +1,121 @@
+---
+title: 'Largest Rectangle in a Polygon'
+description: 'Advent of Code 2025: Day 9 — finding the largest axis-aligned rectangle inside a polygon'
+slug: aoc-2025-day09
+date: 2025-12-09T12:00:00.000Z
+published: true
+category: advent-of-code
+tags:
+    - aoc2025
+image: 'https://res.cloudinary.com/dwrurydlt/image/upload/v1733678871/Blog/aoc_k6dkti.webp'
+---
+
+Day 9 is one of the more geometrically involved puzzles! 🔷 We're given a list of 2D coordinates that form a polygon boundary:
+
+```plain
+7,1
+11,1
+11,7
+9,7
+9,5
+2,5
+2,3
+7,3
+```
+
+## Part 1
+
+Part 1 asks for the largest axis-aligned rectangle whose corners are **any two of the input coordinates**. This is a brute-force O(n²) search — try every pair of points as opposite corners of a rectangle:
+
+```ts
+function findAreaOfLargestRectangle(coords: Coord[]): number {
+    let maxArea = 0;
+
+    coords.forEach((a) => {
+        coords.forEach((b) => {
+            if (!a.equals(b)) {
+                const area = findArea(a, b);
+                if (area > maxArea) maxArea = area;
+            }
+        });
+    });
+
+    return maxArea;
+}
+
+function findArea(a: Coord, b: Coord): number {
+    const sideA = Math.abs(a.x - b.x) + 1;
+    const sideB = Math.abs(a.y - b.y) + 1;
+    return sideA * sideB;
+}
+```
+
+Simple and effective for Part 1.
+
+---
+
+## Part 2
+
+Part 2 requires the largest rectangle **fully contained inside the polygon**. This is significantly harder and needs three key building blocks:
+
+**Step 1** — Build the polygon's edges (vertical and horizontal segments connecting consecutive coordinate pairs).
+
+**Step 2** — Coordinate compression. We only need to check rectangles whose corners align with the polygon's own x and y values, so we build compressed index maps.
+
+**Step 3** — Build a 2D prefix sum where each cell's weight is the area it contributes _inside_ the polygon. We determine inside/outside using ray casting along vertical edges.
+
+```ts
+function findAreaOfLargestRectanglePart2(coords: Coord[]): number {
+    const edges = buildEdges(coords);
+    const {xs, ys, xIndex, yIndex} = buildCompressedAxes(coords);
+    const prefix = buildInsidePrefix(edges, xs, ys);
+
+    let maxArea = 0;
+
+    for (let i = 0; i < coords.length; i++) {
+        const a = coords[i];
+        for (let j = i + 1; j < coords.length; j++) {
+            const b = coords[j];
+            if (a.equals(b)) continue;
+
+            const loX = Math.min(a.x, b.x), hiX = Math.max(a.x, b.x);
+            const loY = Math.min(a.y, b.y), hiY = Math.max(a.y, b.y);
+            const area = (hiX - loX + 1) * (hiY - loY + 1);
+            if (area <= maxArea) continue;
+
+            const x0 = xIndex.get(loX), x1 = xIndex.get(hiX + 1);
+            const y0 = yIndex.get(loY), y1 = yIndex.get(hiY + 1);
+            if (x0 === undefined || x1 === undefined || y0 === undefined || y1 === undefined) continue;
+
+            const insideSum =
+                prefix[y1][x1] - prefix[y0][x1] -
+                prefix[y1][x0] + prefix[y0][x0];
+
+            if (insideSum === area) maxArea = area;
+        }
+    }
+
+    return maxArea;
+}
+```
+
+The prefix sum query tells us how many cells of the candidate rectangle lie inside the polygon. If `insideSum === area`, the whole rectangle is interior. ⭐⭐
+
+---
+
+<div className='flex flex-col gap-2'>
+    <a
+        className='gh-link'
+        href='https://github.com/martapanc/Advent-of-Code/blob/master/2024-2025/src/2025/day09/day09.ts'
+        target='_blank'
+    >
+        Day09 on GitHub
+    </a>
+    <a
+        className='gh-link'
+        href='https://github.com/martapanc/Advent-of-Code/blob/master/2024-2025/src/2025/README.md'
+        target='_blank'
+    >
+        AoC 2025 Overview
+    </a>
+</div>

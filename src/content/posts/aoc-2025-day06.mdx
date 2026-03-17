@@ -1,0 +1,118 @@
+---
+title: 'Grant Calculations in Two Formats'
+description: 'Advent of Code 2025: Day 6 — applying column operators to number grids, with a cephalopod twist'
+slug: aoc-2025-day06
+date: 2025-12-06T12:00:00.000Z
+published: true
+category: advent-of-code
+tags:
+    - aoc2025
+image: 'https://res.cloudinary.com/dwrurydlt/image/upload/v1733678871/Blog/aoc_k6dkti.webp'
+---
+
+Day 6 is a grid maths puzzle – but with a twist in Part 2 that caught me off guard! 
+
+The input is a grid of numbers with an operator row at the bottom:
+
+```plain
+ 3  7  2  5
+ 4  1  8  3
+ 6  9  4  2
+ *  +  *  +
+```
+
+## Part 1
+
+Each column has an operator (`+` or `*`). Apply the operator to all numbers in that column, sum up all the column results:
+
+```ts
+function calcGrantTotal(numberRows: number[][], ops: string[]): number {
+    let total: number = 0;
+    const cols = numberRows[0].length;
+    for (let i = 0; i < cols; i++) {
+        const op = ops[i];
+        const column: number[] = numberRows.map(row => row[i]);
+        const result = column.reduce(
+            (acc, cur) => op === '+' ? acc + cur : acc * cur,
+            op === '+' ? 0 : 1
+        );
+        total += result;
+    }
+    return total;
+}
+```
+
+In the example: column 0 gives `3*4*6 = 72`, column 1 gives `7+1+9 = 17`, column 2 gives `2*8*4 = 64`, column 3 gives `5+3+2 = 10`. Total: `163`.
+
+---
+
+## Part 2
+
+Part 2 introduces the **cephalopod format** — a completely different layout. Multiple independent problems are placed side by side, separated by blank columns. Within each problem, columns are read **right-to-left**, and the operator appears _after_ the numbers (to the right side).
+
+```ts
+function calcGrantTotalCephalopod(lines: string[]): number {
+    const maxLen = Math.max(...lines.map(l => l.length));
+    const grid = lines.map(line => line.padEnd(maxLen, ' '));
+    const numRows = grid.length - 1;
+    const opRow = grid[grid.length - 1];
+
+    // Find separator columns (all-blank across every row)
+    const separatorCols: boolean[] = Array.from({ length: maxLen }, (_, c) =>
+        grid.every(row => row[c] === ' ')
+    );
+
+    // Extract spans between separators
+    const spans: Array<[number, number]> = [];
+    let start = 0;
+    for (let c = 0; c <= maxLen; c++) {
+        if (c === maxLen || separatorCols[c]) {
+            if (start <= c - 1) spans.push([start, c - 1]);
+            start = c + 1;
+        }
+    }
+
+    let total = 0;
+    for (let p = spans.length - 1; p >= 0; p--) {
+        const [startCol, endCol] = spans[p];
+        const op = opRow.slice(startCol, endCol + 1).split('').find(ch => ch !== ' ');
+        if (!op) continue;
+        const numbers: number[] = [];
+
+        // Read columns right-to-left
+        for (let c = endCol; c >= startCol; c--) {
+            const chars = Array.from({ length: numRows }, (_, r) => grid[r][c]);
+            if (chars.every(ch => ch === ' ')) continue;
+            const digits = chars.filter(ch => ch !== ' ').join('');
+            numbers.push(Number(digits));
+        }
+
+        total += numbers.reduce(
+            (acc, cur) => op === '+' ? acc + cur : acc * cur,
+            op === '+' ? 0 : 1
+        );
+    }
+    return total;
+}
+```
+
+The blank-column detection separates independent sub-problems, and then we traverse each one right-to-left to assemble the numbers before applying the operator. Definitely the trickiest parsing I've done so far this year! ⭐⭐
+
+---
+
+<div className='flex flex-col gap-2'>
+    <a
+        className='gh-link'
+        href='https://github.com/martapanc/Advent-of-Code/blob/master/2024-2025/src/2025/day06/day06.ts'
+        target='_blank'
+    >
+        Day06 on GitHub
+    </a>
+    <a
+        className='gh-link'
+        href='https://github.com/martapanc/Advent-of-Code/blob/master/2024-2025/src/2025/README.md'
+        target='_blank'
+    >
+        AoC 2025 Overview
+    </a>
+</div>

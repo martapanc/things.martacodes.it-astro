@@ -1,0 +1,104 @@
+---
+title: 'Bit-Flip Machines and Joltage Equations'
+description: 'Advent of Code 2025: Day 10 — meet-in-the-middle bitmasks and Gaussian elimination'
+slug: aoc-2025-day10
+date: 2025-12-10T12:00:00.000Z
+published: true
+category: advent-of-code
+tags:
+    - aoc2025
+image: 'https://res.cloudinary.com/dwrurydlt/image/upload/v1733678871/Blog/aoc_k6dkti.webp'
+---
+
+Day 10 is the hardest puzzle of the year so far – two completely different algorithmic approaches for the two parts! 🤯
+
+## Part 1 — Meet in the Middle
+
+Each machine has a target bit pattern (e.g. `[.##.#]`) and a set of buttons. Each button toggles specific bit positions (XOR). We need to find the **minimum number of button presses** to reach the target.
+
+With many buttons, brute-forcing all subsets is too slow. The trick: **meet in the middle**. Split the buttons into two halves, enumerate all 2^(n/2) subsets for each half, then look for pairs that combine to form the target.
+
+```ts
+function minButtonPresses(target: bigint, buttons: bigint[]): number {
+    if (target === 0n) return 0;
+    if (buttons.length === 0) return -1;
+
+    const mid = Math.floor(buttons.length / 2);
+    const left = buttons.slice(0, mid);
+    const right = buttons.slice(mid);
+
+    const leftMap = buildSubsetMinWeights(left);
+    let best = Number.POSITIVE_INFINITY;
+
+    const visitRight = (index: number, mask: bigint, weight: number) => {
+        if (index === right.length) {
+            const needed = target ^ mask;
+            const leftWeight = leftMap.get(needed);
+            if (leftWeight !== undefined) {
+                const total = leftWeight + weight;
+                if (total < best) best = total;
+            }
+            return;
+        }
+        visitRight(index + 1, mask, weight);
+        visitRight(index + 1, mask ^ right[index], weight + 1);
+    };
+
+    visitRight(0, 0n, 0);
+    return Number.isFinite(best) ? best : -1;
+}
+```
+
+I used `BigInt` for bitmasks here since the bit patterns can be wider than 32 bits. For each right-half subset with mask `m`, we need a left-half subset that produces `target XOR m` – exactly what `leftMap` gives us in O(1).
+
+---
+
+## Part 2 — Gaussian Elimination + DFS
+
+Part 2 introduces "joltage machines" with numeric targets instead of bit patterns. Each button adds 1 to each of a set of target values, and we need to hit all targets simultaneously.
+
+This is a system of linear equations! I used **RREF (Reduced Row Echelon Form)** with exact fraction arithmetic to find the solution space:
+
+```ts
+function rrefSystem(matrix: Fraction[][], rhs: Fraction[]) {
+    // ... Gaussian elimination with fraction arithmetic ...
+    return {pivotCols, rrefMatrix, rrefRhs, inconsistent};
+}
+```
+
+After RREF, some variables are fixed (pivot columns) and some are free. I then use DFS over the free variables' possible values, computing the pivot values from the RREF equations and checking they're non-negative integers:
+
+```ts
+const dfs = (index: number, sum: number) => {
+    if (sum >= best) return;
+    if (index === freeValues.length) {
+        evaluate(); // compute pivot values and update best
+        return;
+    }
+    for (let value = 0; value <= freeBounds[index]; value++) {
+        freeValues[index] = value;
+        dfs(index + 1, sum + value);
+    }
+};
+```
+
+The fraction arithmetic ensures no floating-point errors during elimination — fractions stay exact as `{ num: bigint, den: bigint }` throughout. ⭐⭐
+
+---
+
+<div className='flex flex-col gap-2'>
+    <a
+        className='gh-link'
+        href='https://github.com/martapanc/Advent-of-Code/blob/master/2024-2025/src/2025/day10/day10.ts'
+        target='_blank'
+    >
+        Day10 on GitHub
+    </a>
+    <a
+        className='gh-link'
+        href='https://github.com/martapanc/Advent-of-Code/blob/master/2024-2025/src/2025/README.md'
+        target='_blank'
+    >
+        AoC 2025 Overview
+    </a>
+</div>

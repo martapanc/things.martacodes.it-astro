@@ -1,0 +1,121 @@
+---
+title: 'Counting Paths Through a Graph'
+description: 'Advent of Code 2025: Day 11 — DFS path counting with cycle detection and bitmask waypoints'
+slug: aoc-2025-day11
+date: 2025-12-11T12:00:00.000Z
+published: true
+category: advent-of-code
+tags:
+    - aoc2025
+image: 'https://res.cloudinary.com/dwrurydlt/image/upload/v1733678871/Blog/aoc_k6dkti.webp'
+---
+
+Day 11 is a directed graph problem. 🗺️ The input describes nodes and their outgoing edges:
+
+```plain
+you: abc def
+abc: ghi out
+def: ghi
+ghi: out
+```
+
+We need to count paths from `"you"` to `"out"`.
+
+## Part 1
+
+Count **all** distinct paths from `"you"` to `"out"`, with cycle detection to handle possible loops in the graph.
+
+The approach is DFS with memoization. The tricky part: standard memoization doesn't work on its own if there are cycles, because a node's result depends on whether we're currently in a cycle. The solution is to use a `visiting` set – if we encounter a node we're currently exploring, we return 0 (no valid path through a cycle):
+
+```ts
+function countPaths(graph: Map<string, string[]>): number {
+    const memo = new Map<string, number>();
+    const visiting = new Set<string>();
+
+    const dfs = (node: string): number => {
+        if (node === "out") return 1;
+        const cached = memo.get(node);
+        if (cached !== undefined) return cached;
+        if (visiting.has(node)) return 0; // cycle detected
+
+        visiting.add(node);
+        const neighbors = graph.get(node) ?? [];
+        let total = 0;
+        for (const next of neighbors) {
+            total += dfs(next);
+        }
+        visiting.delete(node);
+        memo.set(node, total);
+        return total;
+    };
+
+    return dfs("you");
+}
+```
+
+Note that we add to the memo *after* the DFS completes (and remove from `visiting`). This means cycles don't get memoized as 0 – only acyclic sub-paths get cached.
+
+---
+
+## Part 2
+
+Part 2 counts paths that pass through **both** `"dac"` and `"fft"` – two required waypoints.
+
+We extend the DFS state with a **bitmask** tracking which required nodes we've visited. `dac` contributes bit 1, `fft` contributes bit 2. A path is valid at `"out"` only if the mask equals 3 (both bits set):
+
+```ts
+function countPathsVia(graph: Map<string, string[]>): number {
+    const required = new Map<string, number>([
+        ["dac", 1],
+        ["fft", 2],
+    ]);
+    const memo = new Map<string, number>();
+    const visiting = new Set<string>();
+
+    const dfs = (node: string, mask: number): number => {
+        const nextMask = mask | (required.get(node) ?? 0);
+        if (node === "out") {
+            return nextMask === 3 ? 1 : 0;
+        }
+        const key = `${node}|${nextMask}`;
+        const cached = memo.get(key);
+        if (cached !== undefined) return cached;
+        if (visiting.has(key)) return 0;
+
+        visiting.add(key);
+        const neighbors = graph.get(node) ?? [];
+        let total = 0;
+        for (const next of neighbors) {
+            total += dfs(next, nextMask);
+        }
+        visiting.delete(key);
+        memo.set(key, total);
+        return total;
+    };
+
+    return dfs("svr", 0);
+}
+```
+
+The memo key is now `node|mask` – the same node can be visited with different masks (having seen 0, 1, or both waypoints so far), and each combination needs its own cached count. 
+
+Just two more ⭐⭐ and we're there!
+
+---
+
+<div className='flex flex-col gap-2'>
+    <a
+        className='gh-link'
+        href='https://github.com/martapanc/Advent-of-Code/blob/master/2024-2025/src/2025/day11/day11.ts'
+        target='_blank'
+    >
+        Day11 on GitHub
+    </a>
+    <a
+        className='gh-link'
+        href='https://github.com/martapanc/Advent-of-Code/blob/master/2024-2025/src/2025/README.md'
+        target='_blank'
+    >
+        AoC 2025 Overview
+    </a>
+</div>

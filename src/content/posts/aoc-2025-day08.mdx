@@ -1,0 +1,117 @@
+---
+title: '3D Circuit Boxes and Union-Find'
+description: 'Advent of Code 2025: Day 8 — clustering 3D boxes by Euclidean distance with Union-Find'
+slug: aoc-2025-day08
+date: 2025-12-08T12:00:00.000Z
+published: true
+category: advent-of-code
+tags:
+    - aoc2025
+image: 'https://res.cloudinary.com/dwrurydlt/image/upload/v1733678871/Blog/aoc_k6dkti.webp'
+---
+
+Day 8 takes us into three dimensions! 📦 We have a list of 3D box coordinates:
+
+```plain
+1,2,3
+5,1,4
+2,8,1
+9,3,7
+```
+
+Boxes are connected by proximity – shorter Euclidean distances mean they belong to the same circuit component.
+
+Note: it's Euclidean distance (not Manhattan) because we're in 3D space where diagonal connections matter for circuit routing.
+
+## Part 1
+
+We join the k shortest pairs and return the product of the 3 largest resulting component sizes. This is a classic **Union-Find** problem!
+
+First, sort all pairs by distance:
+
+```ts
+function sortedPairs(boxes: Coord3d[]): [number, number, number][] {
+    const pairs: [number, number, number][] = [];
+    for (let i = 0; i < boxes.length; i++) {
+        for (let j = i + 1; j < boxes.length; j++) {
+            pairs.push([dist(boxes[i], boxes[j]), i, j]);
+        }
+    }
+    return pairs.sort((a, b) => a[0] - b[0]);
+}
+```
+
+Then use Union-Find with union-by-size and path compression for efficiency:
+
+```ts
+function makeUnionFind(n: number) {
+    const parent = Array.from({length: n}, (_, i) => i);
+    const size = new Array(n).fill(1);
+
+    function find(x: number): number {
+        while (parent[x] !== x) {
+            parent[x] = parent[parent[x]]; // path compression
+            x = parent[x];
+        }
+        return x;
+    }
+
+    function union(a: number, b: number): boolean {
+        a = find(a); b = find(b);
+        if (a === b) return false;
+        if (size[a] < size[b]) [a, b] = [b, a];
+        parent[b] = a;
+        size[a] += size[b];
+        return true;
+    }
+
+    return { find, union, size };
+}
+```
+
+After joining the k nearest pairs, collect all component sizes, sort descending, and multiply the top 3.
+
+---
+
+## Part 2
+
+Part 2 keeps merging pairs (shortest first) until there's exactly **1 connected component**. The answer is the product of the x-coordinates of the last two boxes that were joined:
+
+```ts
+function findCircuitsPart2(boxes: Coord3d[], _isTestInput: boolean): number {
+    const n = boxes.length;
+    const pairs = sortedPairs(boxes);
+    const { union } = makeUnionFind(n);
+
+    let components = n;
+    for (const [, i, j] of pairs) {
+        if (union(i, j)) {
+            components--;
+            if (components === 1) return boxes[i].x * boxes[j].x;
+        }
+    }
+
+    return -1;
+}
+```
+
+The elegance of Union-Find really shines here – `union()` returns `false` if the two boxes were already in the same component, so we only decrement the component count on actual merges. ⭐⭐
+
+---
+
+<div className='flex flex-col gap-2'>
+    <a
+        className='gh-link'
+        href='https://github.com/martapanc/Advent-of-Code/blob/master/2024-2025/src/2025/day08/day08.ts'
+        target='_blank'
+    >
+        Day08 on GitHub
+    </a>
+    <a
+        className='gh-link'
+        href='https://github.com/martapanc/Advent-of-Code/blob/master/2024-2025/src/2025/README.md'
+        target='_blank'
+    >
+        AoC 2025 Overview
+    </a>
+</div>

@@ -19,4 +19,5 @@ export const allTags: { [key: string]: string } = {
     'red-flags': 'red flags',
     'software-development': 'software dev',
     aoc2024: 'aoc2024',
+    aoc2025: 'aoc2025',
 };

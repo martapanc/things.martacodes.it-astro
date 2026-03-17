@@ -1,0 +1,108 @@
+---
+title: 'Battery Banks and Joltage'
+description: 'Advent of Code 2025: Day 3 — extracting maximum joltage from digit sequences'
+slug: aoc-2025-day03
+date: 2025-12-03T12:00:00.000Z
+published: true
+category: advent-of-code
+tags:
+    - aoc2025
+image: 'https://res.cloudinary.com/dwrurydlt/image/upload/v1733678871/Blog/aoc_k6dkti.webp'
+---
+
+Day 3 introduces us to battery banks – rows of single digits that we need to squeeze maximum joltage out of! ⚡
+
+The input looks like this:
+
+```plain
+987654321111111
+811111111111119
+123456789111111
+```
+
+Each row is a battery bank: a sequence of single-digit numbers.
+
+## Part 1
+
+For Part 1, we need to compute the **output joltage** of each bank. The rule:
+
+1. Find the highest digit in positions 0 to n-2 (not including the last position)
+2. From the position of that highest digit, find the maximum digit in all remaining positions
+3. Concatenate those two digits to form the joltage number
+
+If the highest digit appears multiple times, we try each occurrence and take the maximum joltage overall.
+
+```ts
+function computeTotalOutputJoltage(batteryBanks: number[][]): number {
+    let sum = 0;
+    batteryBanks.forEach(batteryBank => {
+        const highestBattery = maxInArray(batteryBank.slice(0, batteryBank.length - 1));
+        const indicesOfHighestBattery = getAllIndices(batteryBank, highestBattery);
+
+        let max = 0;
+        indicesOfHighestBattery.forEach(batteryIdx => {
+            const candidate = maxInArray(batteryBank.slice(batteryIdx + 1));
+            const joltage = Number.parseInt(`${highestBattery}${candidate}`);
+            if (joltage > max) max = joltage;
+        });
+
+        sum += max;
+    });
+    return sum;
+}
+```
+
+For example, in `987654321111111`, the highest digit in positions 0–13 is `9` at index 0. The maximum digit after index 0 is `8`, so the joltage is `98`.
+
+---
+
+## Part 2
+
+Part 2 asks us to extract the **12 largest digits** from each bank, preserving their relative order, then concatenate them into a number and sum across all banks.
+
+This is a classic "largest k digits keeping order" problem — perfectly solved with a **monotonic decreasing stack**. We iterate through the digits and pop from the stack whenever the current digit is larger than the top (and we haven't removed too many yet):
+
+```ts
+function largestKDigits(bank: number[], k: number): number {
+    const toRemove = bank.length - k;
+    const stack: number[] = [];
+    let removed = 0;
+
+    for (const digit of bank) {
+        while (removed < toRemove && stack.length > 0 && stack[stack.length - 1] < digit) {
+            stack.pop();
+            removed++;
+        }
+        stack.push(digit);
+    }
+
+    return Number(stack.slice(0, k).join(''));
+}
+
+function computeMaxJoltage12(batteryBanks: number[][]): number {
+    return batteryBanks.reduce((sum, bank) => sum + largestKDigits(bank, 12), 0);
+}
+```
+
+The monotonic stack guarantees we keep the digits in their original order while greedily removing smaller ones first. For a bank of 15 digits, we remove 3 – always picking the smallest ones that appear before a larger digit. 
+
+Next ⭐⭐
+
+---
+
+<div className='flex flex-col gap-2'>
+    <a
+        className='gh-link'
+        href='https://github.com/martapanc/Advent-of-Code/blob/master/2024-2025/src/2025/day03/day03.ts'
+        target='_blank'
+    >
+        Day03 on GitHub
+    </a>
+    <a
+        className='gh-link'
+        href='https://github.com/martapanc/Advent-of-Code/blob/master/2024-2025/src/2025/README.md'
+        target='_blank'
+    >
+        AoC 2025 Overview
+    </a>
+</div>

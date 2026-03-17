@@ -1,0 +1,98 @@
+---
+title: 'Fresh Ingredients by the Range'
+description: 'Advent of Code 2025: Day 5 — counting and merging ID ranges for fresh ingredients'
+slug: aoc-2025-day05
+date: 2025-12-05T12:00:00.000Z
+published: true
+category: advent-of-code
+tags:
+    - aoc2025
+image: 'https://res.cloudinary.com/dwrurydlt/image/upload/v1733678871/Blog/aoc_k6dkti.webp'
+---
+
+Day 5 brings us to the kitchen! 🥗 We have a list of ID ranges and a list of specific ingredient IDs.
+
+The input mixes range lines (with a `-`) and standalone ingredient IDs:
+
+```plain
+3-5
+10-14
+16-20
+12-18
+
+1
+5
+8
+11
+17
+32
+```
+
+## Part 1
+
+Part 1 asks: how many ingredient IDs fall within **at least one** of the given ranges?
+
+```ts
+function findFreshIngredients(idRanges: IdRange[], ingredientIds: number[]): number {
+    let freshCount = 0;
+    for (const id of ingredientIds)
+        for (const idRange of idRanges) {
+            if (id < idRange.from || id > idRange.to)
+                continue;
+            else {
+                freshCount++;
+                break;
+            }
+        }
+    return freshCount;
+}
+```
+
+Simple nested loop – for each ingredient ID, check all ranges and break as soon as we find a match (to avoid double-counting). From the example above, IDs `5`, `11`, and `17` are fresh, so the answer is 3.
+
+---
+
+## Part 2
+
+Part 2 ignores the specific ingredient IDs entirely and asks: what is the total count of distinct IDs covered across **all merged ranges**?
+
+The trick here is merging overlapping (and adjacent!) ranges before counting. Sort by `from`, then greedily extend the current range whenever the next one starts at or before `last.to + 1` (the +1 handles adjacent ranges like `3-5` and `6-8` which together cover `3-8`):
+
+```ts
+function findTotalFreshIngredientCount(idRanges: IdRange[], _: number[]): number {
+    const sorted = idRanges.slice().sort((a, b) => a.from - b.from);
+    const merged: IdRange[] = [];
+
+    for (const range of sorted) {
+        const last = merged[merged.length - 1];
+        if (last && range.from <= last.to + 1) {
+            last.to = Math.max(last.to, range.to);
+        } else {
+            merged.push({ ...range });
+        }
+    }
+
+    return merged.reduce((sum, r) => sum + (r.to - r.from + 1), 0);
+}
+```
+
+For the test input, ranges `10-14`, `12-18`, and `16-20` overlap and merge into `10-20`. Adding `3-5` gives a total coverage of 3 + 11 = 14 IDs. ⭐⭐
+
+---
+
+<div className='flex flex-col gap-2'>
+    <a
+        className='gh-link'
+        href='https://github.com/martapanc/Advent-of-Code/blob/master/2024-2025/src/2025/day05/day05.ts'
+        target='_blank'
+    >
+        Day05 on GitHub
+    </a>
+    <a
+        className='gh-link'
+        href='https://github.com/martapanc/Advent-of-Code/blob/master/2024-2025/src/2025/README.md'
+        target='_blank'
+    >
+        AoC 2025 Overview
+    </a>
+</div>

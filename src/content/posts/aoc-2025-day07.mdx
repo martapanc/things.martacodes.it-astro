@@ -1,0 +1,115 @@
+---
+title: 'Bean Plant Splits and Timelines'
+description: 'Advent of Code 2025: Day 7 — BFS splits and memoized timeline counting on a stalk grid'
+slug: aoc-2025-day07
+date: 2025-12-07T12:00:00.000Z
+published: true
+category: advent-of-code
+tags:
+    - aoc2025
+image: 'https://res.cloudinary.com/dwrurydlt/image/upload/v1733678871/Blog/aoc_k6dkti.webp'
+---
+
+Day 7 gives us a growing bean plant! 🌱 We have a grid where `S` marks the starting seed at the top, `.` are plain stalk cells, and `^` are split points where the stalk forks left and right.
+
+```plain
+S..............
+...............
+.....^.........
+...^...^.......
+..^..^...^.....
+```
+
+Movement always goes **south** from `S`, until a `^` is hit – at which point the stalk forks westward and eastward.
+
+## Part 1
+
+Count all `^` nodes reachable from `S` using a BFS:
+
+```ts
+function findBeanSplits(grid: Grid, initialPos: Coord): number {
+    const visited = new Set<string>();
+    const queue: Coord[] = [move(initialPos, Cardinal.SOUTH)];
+    let splits = 0;
+
+    while (queue.length > 0) {
+        let current = queue.shift()!;
+
+        while (true) {
+            const key = current.serialize();
+            const cellValue = grid.get(key);
+
+            if (cellValue === undefined || visited.has(key)) break;
+
+            visited.add(key);
+
+            if (cellValue === '^') {
+                splits++;
+                const left = move(current, Cardinal.WEST);
+                const right = move(current, Cardinal.EAST);
+                if (grid.has(left.serialize())) queue.push(left);
+                if (grid.has(right.serialize())) queue.push(right);
+                break;
+            }
+
+            current = move(current, Cardinal.SOUTH);
+        }
+    }
+
+    return splits;
+}
+```
+
+Each BFS entry walks south until it either falls off the grid or hits a `^`. At a split, two new paths are enqueued – one going left, one going right – and both continue southward from their respective positions.
+
+---
+
+## Part 2
+
+Part 2 asks for the total number of distinct **path timelines** from the start to the void (falling off the grid). A simple BFS count doesn't work here because the same `^` node might be reachable via many paths and each contributes to the total independently.
+
+The elegant solution: recursive memoized DFS. At each cell, the number of timelines is either 1 (if we fall off the grid) or the sum/split of timelines from child cells:
+
+```ts
+function findBeanSplitTimelines(grid: Grid, initialPos: Coord): number {
+    const memo = new Map<string, number>();
+
+    function timelines(coord: Coord): number {
+        const key = coord.serialize();
+        if (memo.has(key)) return memo.get(key)!;
+
+        const cellValue = grid.get(key);
+        if (cellValue === undefined) return 1; // fell off grid = 1 timeline
+
+        const result = cellValue === '^'
+            ? timelines(move(coord, Cardinal.WEST)) + timelines(move(coord, Cardinal.EAST))
+            : timelines(move(coord, Cardinal.SOUTH));
+
+        memo.set(key, result);
+        return result;
+    }
+
+    return timelines(move(initialPos, Cardinal.SOUTH));
+}
+```
+
+The memoization is crucial – without it, the number of recursive calls would be exponential in the number of splits. With it, each cell is computed at most once. ⭐⭐
+
+---
+
+<div className='flex flex-col gap-2'>
+    <a
+        className='gh-link'
+        href='https://github.com/martapanc/Advent-of-Code/blob/master/2024-2025/src/2025/day07/day07.ts'
+        target='_blank'
+    >
+        Day07 on GitHub
+    </a>
+    <a
+        className='gh-link'
+        href='https://github.com/martapanc/Advent-of-Code/blob/master/2024-2025/src/2025/README.md'
+        target='_blank'
+    >
+        AoC 2025 Overview
+    </a>
+</div>

@@ -1,0 +1,103 @@
+---
+title: 'Spinning the Circular Dial'
+description: 'Advent of Code 2025: Day 1 — navigating a 0–99 dial and counting zero crossings'
+slug: aoc-2025-day01
+date: 2025-12-01T12:00:00.000Z
+published: true
+category: advent-of-code
+tags:
+    - aoc2025
+image: 'https://res.cloudinary.com/dwrurydlt/image/upload/v1733678871/Blog/aoc_k6dkti.webp'
+---
+
+AoC 2025 is here, and we're kicking things off with a circular dial!
+
+The puzzle involves a dial with positions 0–99. We start at position 50, and each line of input is a movement like `L68` or `R48` – left or right by that many steps. The dial wraps around: going right past 99 brings you back to 0, and going left past 0 wraps to 99.
+
+```plain
+L68
+L30
+R48
+R15
+L99
+```
+
+## Part 1
+
+For Part 1 we just need to count how many times, after each movement, the dial **lands exactly on position 0**.
+
+The key insight is handling the modular arithmetic correctly for both positive and negative wrap-arounds. A naïve `%` in TypeScript can return negative values for negative numbers, so we need the double-modulo trick:
+
+```ts
+function countZeroPositions(movements: MovementType[]): number {
+    let positionsOnZero = 0;
+    let position = 50;
+
+    movements.forEach(movement => {
+        const newPosition = movement.dir === 'R'
+            ? position + movement.value
+            : position - movement.value;
+        position = ((newPosition % 100) + 100) % 100; // handles negative wrap too
+
+        if (position === 0) {
+            positionsOnZero++;
+        }
+    })
+
+    return positionsOnZero;
+}
+```
+
+The `((newPosition % 100) + 100) % 100` expression is the classic way to do true modulo in JavaScript – even if `newPosition` is negative, adding 100 before the second `%` keeps us in the right range.
+
+---
+
+## Part 2
+
+In part 2, instead of counting where we _land_, we need to count every time the position **passes through 0** – including multiple passes if a single move is large enough to lap the dial.
+
+The trick is `firstK`: the number of steps until we first hit 0 from our current position. If we're moving right from position 40, `firstK` is `100 - 40 = 60`. After that, every 100 additional steps we pass through 0 once more.
+
+```ts
+function countZeroPassages(movements: MovementType[]): number {
+    let count = 0;
+    let position = 50;
+
+    movements.forEach(({ dir, value }) => {
+        if (dir === 'R') {
+            const firstK = position === 0 ? 100 : 100 - position;
+            if (value >= firstK) count += Math.floor((value - firstK) / 100) + 1;
+            position = (position + value) % 100;
+        } else {
+            const firstK = position === 0 ? 100 : position;
+            if (value >= firstK) count += Math.floor((value - firstK) / 100) + 1;
+            position = ((position - value) % 100 + 100) % 100;
+        }
+    });
+
+    return count;
+}
+```
+
+The edge case where `position === 0` is important: if we're already on zero, we've just departed from it, so the _next_ passage happens after a full 100-step circle. 
+
+The first two stars are done! ⭐⭐
+
+---
+
+<div className='flex flex-col gap-2'>
+    <a
+        className='gh-link'
+        href='https://github.com/martapanc/Advent-of-Code/blob/master/2024-2025/src/2025/day01/day01.ts'
+        target='_blank'
+    >
+        Day01 on GitHub
+    </a>
+    <a
+        className='gh-link'
+        href='https://github.com/martapanc/Advent-of-Code/blob/master/2024-2025/src/2025/README.md'
+        target='_blank'
+    >
+        AoC 2025 Overview
+    </a>
+</div>
