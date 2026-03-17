@@ -1,10 +1,10 @@
 ---
 title: 'Bit-Flip Machines and Joltage Equations'
-description: 'Advent of Code 2025: Day 10 — meet-in-the-middle bitmasks and Gaussian elimination'
+description: 'Advent of Code 2025: Day 10 – meet-in-the-middle bitmasks and Gaussian elimination'
 slug: aoc-2025-day10
 date: 2025-12-10T12:00:00.000Z
 published: true
-category: advent-of-code
+category: advent-of-code-2025
 tags:
     - aoc2025
 image: 'https://res.cloudinary.com/dwrurydlt/image/upload/v1733678871/Blog/aoc_k6dkti.webp'
@@ -12,7 +12,7 @@ image: 'https://res.cloudinary.com/dwrurydlt/image/upload/v1733678871/Blog/aoc_k
 
 Day 10 is the hardest puzzle of the year so far – two completely different algorithmic approaches for the two parts! 🤯
 
-## Part 1 — Meet in the Middle
+## Part 1 – Meet in the Middle
 
 Each machine has a target bit pattern (e.g. `[.##.#]`) and a set of buttons. Each button toggles specific bit positions (XOR). We need to find the **minimum number of button presses** to reach the target.
 
@@ -53,7 +53,7 @@ I used `BigInt` for bitmasks here since the bit patterns can be wider than 32 bi
 
 ---
 
-## Part 2 — Gaussian Elimination + DFS
+## Part 2 – Gaussian Elimination + DFS
 
 Part 2 introduces "joltage machines" with numeric targets instead of bit patterns. Each button adds 1 to each of a set of target values, and we need to hit all targets simultaneously.
 
@@ -82,7 +82,7 @@ const dfs = (index: number, sum: number) => {
 };
 ```
 
-The fraction arithmetic ensures no floating-point errors during elimination — fractions stay exact as `{ num: bigint, den: bigint }` throughout. ⭐⭐
+The fraction arithmetic ensures no floating-point errors during elimination – fractions stay exact as `{ num: bigint, den: bigint }` throughout. ⭐⭐
 
 ---
 

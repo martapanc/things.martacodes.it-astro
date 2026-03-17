@@ -1,10 +1,10 @@
 ---
 title: 'Repeated ID Patterns'
-description: 'Advent of Code 2025: Day 2 — finding IDs with repeating digit chunks in a range'
+description: 'Advent of Code 2025: Day 2 – finding IDs with repeating digit chunks in a range'
 slug: aoc-2025-day02
 date: 2025-12-02T12:00:00.000Z
 published: true
-category: advent-of-code
+category: advent-of-code-2025
 tags:
     - aoc2025
 image: 'https://res.cloudinary.com/dwrurydlt/image/upload/v1733678871/Blog/aoc_k6dkti.webp'
@@ -52,7 +52,7 @@ Pretty clean! Convert the number to a string, check even length, split, compare.
 
 Part 2 generalises the rule: an ID is invalid if its digits can be split into **k equal chunks** (for any k ≥ 2) where all chunks are identical. So now `111` is invalid (k=3, chunk `1`), `112112` is invalid (k=2, chunk `112`), and so on.
 
-The key is only trying divisors of the digit length — there's no point trying chunk sizes that don't divide evenly. I also added a couple of helpers:
+The key is only trying divisors of the digit length – there's no point trying chunk sizes that don't divide evenly. I also added a couple of helpers:
 
 ```ts
 export const divisors = (num: number) => [...Array(num)]

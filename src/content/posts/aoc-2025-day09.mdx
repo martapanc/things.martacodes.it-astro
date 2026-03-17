@@ -1,10 +1,10 @@
 ---
 title: 'Largest Rectangle in a Polygon'
-description: 'Advent of Code 2025: Day 9 — finding the largest axis-aligned rectangle inside a polygon'
+description: 'Advent of Code 2025: Day 9 – finding the largest axis-aligned rectangle inside a polygon'
 slug: aoc-2025-day09
 date: 2025-12-09T12:00:00.000Z
 published: true
-category: advent-of-code
+category: advent-of-code-2025
 tags:
     - aoc2025
 image: 'https://res.cloudinary.com/dwrurydlt/image/upload/v1733678871/Blog/aoc_k6dkti.webp'
@@ -25,7 +25,7 @@ Day 9 is one of the more geometrically involved puzzles! 🔷 We're given a list
 
 ## Part 1
 
-Part 1 asks for the largest axis-aligned rectangle whose corners are **any two of the input coordinates**. This is a brute-force O(n²) search — try every pair of points as opposite corners of a rectangle:
+Part 1 asks for the largest axis-aligned rectangle whose corners are **any two of the input coordinates**. This is a brute-force O(n²) search – try every pair of points as opposite corners of a rectangle:
 
 ```ts
 function findAreaOfLargestRectangle(coords: Coord[]): number {
@@ -58,11 +58,11 @@ Simple and effective for Part 1.
 
 Part 2 requires the largest rectangle **fully contained inside the polygon**. This is significantly harder and needs three key building blocks:
 
-**Step 1** — Build the polygon's edges (vertical and horizontal segments connecting consecutive coordinate pairs).
+**Step 1** – Build the polygon's edges (vertical and horizontal segments connecting consecutive coordinate pairs).
 
-**Step 2** — Coordinate compression. We only need to check rectangles whose corners align with the polygon's own x and y values, so we build compressed index maps.
+**Step 2** – Coordinate compression. We only need to check rectangles whose corners align with the polygon's own x and y values, so we build compressed index maps.
 
-**Step 3** — Build a 2D prefix sum where each cell's weight is the area it contributes _inside_ the polygon. We determine inside/outside using ray casting along vertical edges.
+**Step 3** – Build a 2D prefix sum where each cell's weight is the area it contributes _inside_ the polygon. We determine inside/outside using ray casting along vertical edges.
 
 ```ts
 function findAreaOfLargestRectanglePart2(coords: Coord[]): number {

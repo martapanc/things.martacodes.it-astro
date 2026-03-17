@@ -1,10 +1,10 @@
 ---
 title: 'Fitting Shapes into Regions'
-description: 'Advent of Code 2025: Day 12 — checkerboard parity and knapsack DP for tetromino region fitting'
+description: 'Advent of Code 2025: Day 12 – checkerboard parity and knapsack DP for tetromino region fitting'
 slug: aoc-2025-day12
 date: 2025-12-12T12:00:00.000Z
 published: true
-category: advent-of-code
+category: advent-of-code-2025
 tags:
     - aoc2025
 image: 'https://res.cloudinary.com/dwrurydlt/image/upload/v1733678871/Blog/aoc_k6dkti.webp'
@@ -32,7 +32,7 @@ A region is **fittable** if the given shapes can fill it completely. Two conditi
 
 **Condition 1 – Area**: the total area of all shapes × their counts must equal the region's area.
 
-**Condition 2 – Checkerboard parity**: imagine colouring the region like a chessboard (alternating black/white squares). Each shape has its own imbalance — the absolute difference between its black and white squares. The shapes' combined imbalances must be able to match the region's own imbalance.
+**Condition 2 – Checkerboard parity**: imagine colouring the region like a chessboard (alternating black/white squares). Each shape has its own imbalance – the absolute difference between its black and white squares. The shapes' combined imbalances must be able to match the region's own imbalance.
 
 First, we analyse each shape:
 

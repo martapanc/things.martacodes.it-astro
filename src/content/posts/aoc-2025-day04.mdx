@@ -1,10 +1,10 @@
 ---
 title: 'Unrolling the Paper Rolls'
-description: 'Advent of Code 2025: Day 4 — removing accessible paper rolls from a grid iteratively'
+description: 'Advent of Code 2025: Day 4 – removing accessible paper rolls from a grid iteratively'
 slug: aoc-2025-day04
 date: 2025-12-04T12:00:00.000Z
 published: true
-category: advent-of-code
+category: advent-of-code-2025
 tags:
     - aoc2025
 image: 'https://res.cloudinary.com/dwrurydlt/image/upload/v1733678871/Blog/aoc_k6dkti.webp'
@@ -26,7 +26,7 @@ A paper roll is **accessible** if it has fewer than 4 adjacent `@` neighbours (u
 
 ## Part 1
 
-Simple enough — just count how many `@` cells have fewer than 4 `@` neighbours:
+Simple enough – just count how many `@` cells have fewer than 4 `@` neighbours:
 
 ```ts
 function getRollCoords(grid: Map<string, string>): Coord[] {

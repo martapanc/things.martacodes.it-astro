@@ -1,10 +1,10 @@
 ---
 title: 'Grant Calculations in Two Formats'
-description: 'Advent of Code 2025: Day 6 — applying column operators to number grids, with a cephalopod twist'
+description: 'Advent of Code 2025: Day 6 – applying column operators to number grids, with a cephalopod twist'
 slug: aoc-2025-day06
 date: 2025-12-06T12:00:00.000Z
 published: true
-category: advent-of-code
+category: advent-of-code-2025
 tags:
     - aoc2025
 image: 'https://res.cloudinary.com/dwrurydlt/image/upload/v1733678871/Blog/aoc_k6dkti.webp'
@@ -48,7 +48,7 @@ In the example: column 0 gives `3*4*6 = 72`, column 1 gives `7+1+9 = 17`, column
 
 ## Part 2
 
-Part 2 introduces the **cephalopod format** — a completely different layout. Multiple independent problems are placed side by side, separated by blank columns. Within each problem, columns are read **right-to-left**, and the operator appears _after_ the numbers (to the right side).
+Part 2 introduces the **cephalopod format** – a completely different layout. Multiple independent problems are placed side by side, separated by blank columns. Within each problem, columns are read **right-to-left**, and the operator appears _after_ the numbers (to the right side).
 
 ```ts
 function calcGrantTotalCephalopod(lines: string[]): number {

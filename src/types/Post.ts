@@ -3,6 +3,8 @@ export const allCategories: { [key: string]: string } = {
     'software-development': 'Software Development',
     'job-search': 'Job Search',
     'advent-of-code': 'Advent of Code',
+    'advent-of-code-2024': 'Advent of Code 2024',
+    'advent-of-code-2025': 'Advent of Code 2025',
     uncategorized: 'Uncategorized',
 };
 

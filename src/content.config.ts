@@ -14,6 +14,8 @@ const posts = defineCollection({
             'software-development',
             'job-search',
             'advent-of-code',
+            'advent-of-code-2024',
+            'advent-of-code-2025',
             'uncategorized',
         ]),
         tags: z.array(z.string()).default([]),
